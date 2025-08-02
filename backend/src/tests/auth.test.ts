@@ -146,3 +146,28 @@
 //     expect(logout.status).toStrictEqual(401);
 //   });
 // });
+import request from "supertest";
+import express from "express";
+
+const createTestApp = () => {
+  const app = express();
+  app.use(express.json());
+
+  app.get("/server", (req, res) => {
+    res.json({ message: "Backend is running!" });
+  });
+
+  return app;
+};
+
+describe("Start server test", () => {
+  test("GET /server should return success message", async () => {
+    const app = createTestApp();
+
+    const response = await request(app).get("/server").expect(200);
+
+    expect(response.body).toEqual({
+      message: "Backend is running!",
+    });
+  });
+});
