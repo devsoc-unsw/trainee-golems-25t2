@@ -1,4 +1,3 @@
-
 # Full-Stack Application
 
 A modern full-stack application built with React, TypeScript, Tailwind CSS, Node.js, Express, and Prisma.
