@@ -183,9 +183,9 @@ jobs:
         working-directory: backend
         run: npx prisma generate
 
-      - name: Run database migrations
+      - name: Setup test database
         working-directory: backend
-        run: npx prisma migrate deploy
+        run: npx prisma db push --force-reset
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
 
