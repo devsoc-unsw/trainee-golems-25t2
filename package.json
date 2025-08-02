@@ -1,0 +1,33 @@
+{
+  "name": "trainee-golems-25t2",
+  "version": "1.0.0",
+  "description": "Full-stack TypeScript application with React frontend and Node.js backend",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && npm test",
+    "lint:frontend": "cd frontend && npm run lint",
+    "lint:backend": "cd backend && npm run lint",
+    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "devDependencies": {
+    "husky": "^9.0.11"
+  },
+  "keywords": [
+    "typescript",
+    "react",
+    "nodejs",
+    "fullstack"
+  ],
+  "author": "",
+  "license": "ISC"
+}

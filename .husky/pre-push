@@ -1,0 +1,25 @@
+#!/bin/sh
+echo "🚀 Running pre-push checks..."
+
+# Frontend checks
+echo "📱 Testing and building frontend..."
+cd frontend
+
+echo "  🧪 Running tests..."
+npm test -- --run || exit 1
+
+echo "  🏗️  Running build..."
+npm run build || exit 1
+
+# Backend checks
+echo "🖥️  Testing and building backend..."
+cd ../backend
+
+echo "  🧪 Running tests..."
+npm test || exit 1
+
+echo "  🏗️  Running build..."
+npm run build || exit 1
+
+cd ..
+echo "✅ All pre-push checks passed! Safe to push."

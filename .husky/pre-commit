@@ -1,0 +1,24 @@
+echo "🔍 Running pre-commit checks..."
+
+# Frontend checks
+echo "📱 Checking frontend..."
+cd frontend
+
+echo "  🔍 Running ESLint..."
+npm run lint || exit 1
+
+echo "  🔧 Running TypeScript type check..."
+npx tsc --noEmit || exit 1
+
+# Backend checks  
+echo "🖥️  Checking backend..."
+cd ../backend
+
+echo "  🔍 Running ESLint..."
+npm run lint || exit 1
+
+echo "  🔧 Running TypeScript type check..."
+npx tsc --noEmit || exit 1
+
+cd ..
+echo "✅ All pre-commit checks passed!"
