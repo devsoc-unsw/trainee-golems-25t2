@@ -5,7 +5,7 @@ import { Session } from "./constants/types";
 // import { getSessionsCollection } from "./db";
 
 // Session check middleware
-async function sessionMiddleware(
+function sessionMiddleware(
   req: Request,
   _res: Response,
   next: NextFunction

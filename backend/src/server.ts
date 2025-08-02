@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes";
 import { errorMiddleware } from "./middleware";
-import { loadData, connectToDatabase } from "./dataStore";
+import { loadData } from "./dataStore";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,10 +12,9 @@ app.use(express.json());
 
 dotenv.config();
 
-async function startServer() {
+function startServer() {
   try {
-    await connectToDatabase();
-    await loadData();
+    loadData();
 
     app.listen(port, () => {
       console.log(`Spotz server is running at http://localhost:${port}`);
@@ -40,8 +39,7 @@ async function startServer() {
 startServer();
 
 // closing the server
-process.on("SIGINT", async () => {
+process.on("SIGINT", () => {
   console.log("Shutting down server.");
-  // dbDisconnect();
   process.exit();
 });
