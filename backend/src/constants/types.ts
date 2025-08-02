@@ -6,6 +6,7 @@ export type Email = string; // has "@[some letters > 0].[some letters > 1]"
 export type Password = string; // greater than 6 characters & (?=.*\d)(?=.*[a-z])(?=.*[A-Z])
 
 export type Session = {
+  _id?: string;
   sessionId: SessionId;
   userId: UserId;
 };
@@ -23,5 +24,6 @@ export type SessionStore = {
 };
 
 export type DataStore = {
+  _id?: string;
   users: User[];
 };

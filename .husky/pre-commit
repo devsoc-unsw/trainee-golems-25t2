@@ -10,7 +10,7 @@ npm run lint || exit 1
 echo "  🔧 Running TypeScript type check..."
 npx tsc --noEmit || exit 1
 
-# Backend checks  
+# Backend checks
 echo "🖥️  Checking backend..."
 cd ../backend
 

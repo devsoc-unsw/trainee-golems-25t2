@@ -1,25 +1,36 @@
-#!/bin/sh
 echo "🚀 Running pre-push checks..."
 
 # Frontend checks
-echo "📱 Testing and building frontend..."
+echo "📱 Checking frontend..."
 cd frontend
 
+echo "  🔍 Running ESLint..."
+npm run lint || exit 1
+
+echo "  🔧 Running TypeScript type check..."
+npx tsc --noEmit || exit 1
+
 echo "  🧪 Running tests..."
-npm test -- --run || exit 1
+npm run test -- --run || exit 1
 
 echo "  🏗️  Running build..."
 npm run build || exit 1
 
 # Backend checks
-echo "🖥️  Testing and building backend..."
+echo "🖥️  Checking backend..."
 cd ../backend
 
+echo "  🔍 Running ESLint..."
+npm run lint || exit 1
+
+echo "  🔧 Running TypeScript type check..."
+npx tsc --noEmit || exit 1
+
 echo "  🧪 Running tests..."
-npm test || exit 1
+npm run test || exit 1
 
 echo "  🏗️  Running build..."
 npm run build || exit 1
 
 cd ..
-echo "✅ All pre-push checks passed! Safe to push."
+echo "✅ All pre-push checks passed!"

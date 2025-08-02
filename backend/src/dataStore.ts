@@ -1,14 +1,16 @@
 import { v4 as uuidv4 } from "uuid";
 import { DataStore, Session, SessionStore } from "./constants/types";
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import * as dotenv from "dotenv";
 
-let sessionStore: SessionStore = { sessions: [] };
+const sessionStore: SessionStore = { sessions: [] };
 let database: DataStore = {
   users: [],
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let sessionCollection: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let dataCollection: any;
 
 export async function connectToDatabase() {

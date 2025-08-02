@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
-import { loadSessions, getSessions } from './dataStore';
-import { ErrorMap, StatusCodeMap } from './constants/errors';
-import { Session } from './constants/types';
+import { Request, Response, NextFunction } from "express";
+import { loadSessions, getSessions } from "./dataStore";
+import { ErrorMap, StatusCodeMap } from "./constants/errors";
+import { Session } from "./constants/types";
 // import { getSessionsCollection } from "./db";
 
 // Session check middleware
@@ -13,20 +13,20 @@ async function sessionMiddleware(
   try {
     loadSessions();
     const sessionId = req.cookies.sessionId;
-    let sessions: Session[] = getSessions();
+    const sessions: Session[] = getSessions();
     const sessionExists = sessions.find((s) => s.sessionId === sessionId);
 
     if (!sessionId || !sessionExists) {
       // Next error rather than throw is due to this being an asynchronous function
       return next({
-        status: StatusCodeMap[ErrorMap['INVALID_SESSION']],
-        message: ErrorMap['INVALID_SESSION'],
+        status: StatusCodeMap[ErrorMap["INVALID_SESSION"]],
+        message: ErrorMap["INVALID_SESSION"],
       });
     }
 
     next();
   } catch (e) {
-    console.error('Session Middleware Error:', e);
+    console.error("Session Middleware Error:", e);
     return next(e);
   }
 }
@@ -36,6 +36,7 @@ function errorMiddleware(
   err: Error,
   _req: Request,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ) {
   const message = err.message;

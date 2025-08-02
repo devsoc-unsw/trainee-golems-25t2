@@ -12,13 +12,8 @@
     "test:frontend": "cd frontend && npm test",
     "test:backend": "cd backend && npm test",
     "lint:frontend": "cd frontend && npm run lint",
-    "lint:backend": "cd backend && npm run lint",
-    "install:all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+    "lint:backend": "cd backend && npm run lint"
   },
-  "workspaces": [
-    "frontend",
-    "backend"
-  ],
   "devDependencies": {
     "husky": "^9.0.11"
   },
