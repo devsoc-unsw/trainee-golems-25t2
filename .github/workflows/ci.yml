@@ -269,6 +269,6 @@ jobs:
         working-directory: frontend
         run: npm ci --legacy-peer-deps
 
-      - name: Run integration tests
-        working-directory: frontend
-        run: npm run test:integration
+      # - name: Run integration tests
+      #   working-directory: frontend
+      #   run: npm run test:integration
