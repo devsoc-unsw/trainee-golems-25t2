@@ -38,4 +38,4 @@ coverage/
 
 # Cache
 .npm
-.eslintcache
+.eslintcachebackend/.env
