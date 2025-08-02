@@ -1,6 +1,6 @@
 import { ErrorMap } from '../constants/errors';
 import { Email, Name, Password } from '../constants/types';
-import { getData } from '../dataStore';
+
 
 export function isValidName(name: Name): string | boolean {
   if (name.length > 100) {
@@ -26,9 +26,10 @@ export function isValidEmail(
     return ErrorMap['EMAIL_TOO_SHORT'];
   }
 
-  const users = getData().users;
-  if (users.find((u) => u.email === email) && isRegister) {
-    return ErrorMap['EMAIL_ALREADY_EXISTS'];
+  // Note: Email uniqueness now checked at the service level with Prisma
+  // This helper now only validates format and length
+  if (isRegister) {
+    // Service layer will handle uniqueness validation with database
   }
 
   const pattern = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/;

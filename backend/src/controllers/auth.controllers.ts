@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import * as authService from "../services/auth.services";
+import * as authService from "../services/auth.service";
 
 // register - post HTTP method
 async function register(req: Request, res: Response) {
   try {
     const { name, email, password } = req.body;
-    const auth = authService.authRegister(name, email, password);
+    const auth = await authService.authRegister(name, email, password);
 
     res.cookie("sessionId", auth.sessionId, {
       maxAge: 24 * 60 * 60 * 1000,
@@ -26,7 +26,7 @@ async function register(req: Request, res: Response) {
 async function login(req: Request, res: Response) {
   try {
     const { email, password } = req.body;
-    const auth = authService.authLogin(email, password);
+    const auth = await authService.authLogin(email, password);
 
     res.cookie("sessionId", auth.sessionId, {
       maxAge: 24 * 60 * 60 * 1000,
@@ -47,7 +47,7 @@ async function login(req: Request, res: Response) {
 async function logout(req: Request, res: Response) {
   try {
     const session = req.cookies.sessionId;
-    const auth = authService.authLogout(session as string);
+    const auth = await authService.authLogout(session as string);
 
     res.clearCookie("sessionId", {
       httpOnly: true,
