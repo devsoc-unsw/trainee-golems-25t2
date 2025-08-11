@@ -1,23 +1,71 @@
+import FloatingIcon from "../Components/FloatingIcon";
 import { Navbar } from "../Components/Navbar";
+import productivity from "../assets/productivity.png";
+import marketplace from "../assets/marketplace.png";
+import accomodation from "../assets/accomodation.png";
+import aiLectureSlide from "../assets/ai-lecture-slides.png";
+import DotGrid from "../Components/DotGrid";
 
 function Home() {
+  const icons = [
+    { src: productivity, posx: "top-44", posy: "left-16", rotate: "rotate-12" },
+    {
+      src: marketplace,
+      posx: "bottom-44",
+      posy: "right-20",
+      rotate: "rotate-6",
+    },
+    {
+      src: accomodation,
+      posx: "bottom-60",
+      posy: "left-36",
+      rotate: "-rotate-6",
+    },
+    {
+      src: aiLectureSlide,
+      posx: "top-44",
+      posy: "right-16",
+      rotate: "-rotate-12",
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          position: "fixed",
+          zIndex: "1",
+        }}
+      >
+        <DotGrid
+          dotSize={2}
+          gap={5}
+          baseColor="#000"
+          activeColor="#000"
+          proximity={120}
+          shockRadius={250}
+          shockStrength={5}
+          resistance={750}
+          returnDuration={1.5}
+        />
+      </div>
       <Navbar />
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
             Welcome to MyApp
           </h1>
-          <p className="mt-4 text-xl text-gray-600 max-w-2xl mx-auto">
-            A full-stack application built with React, TypeScript, Tailwind CSS,
-            and Node.js
-          </p>
-          <div className="mt-8">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors">
-              Get Started
-            </button>
-          </div>
+          {icons.map(({ src, posx, posy, rotate }, index) => (
+            <FloatingIcon
+              key={index}
+              image={src}
+              posx={posx}
+              posy={posy}
+              rotate={rotate}
+            />
+          ))}
         </div>
       </div>
     </div>
