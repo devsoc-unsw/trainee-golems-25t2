@@ -1,9 +1,9 @@
 import FloatingIcon from "../Components/FloatingIcon";
 import { Navbar } from "../Components/Navbar";
-import productivity from "../assets/productivity.png";
-import marketplace from "../assets/marketplace.png";
-import accomodation from "../assets/accomodation.png";
-import aiLectureSlide from "../assets/ai-lecture-slides.png";
+import productivity from "../assets/icons/productivity.png";
+import marketplace from "../assets/icons/marketplace.png";
+import accomodation from "../assets/icons/accomodation.png";
+import aiLectureSlide from "../assets/icons/ai-lecture-slides.png";
 import DotGrid from "../Components/DotGrid";
 
 function Home() {
