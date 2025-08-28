@@ -134,11 +134,13 @@ const Ballpit: React.FC<BallpitProps> = ({
       requestAnimationFrame(animate);
     }
 
+    const mountNode = mountRef.current;
+
     animate();
 
     // Mount renderer
-    if (mountRef.current) {
-      mountRef.current.appendChild(renderer.domElement);
+    if (mountNode) {
+      mountNode.appendChild(renderer.domElement);
     }
 
     // Handle window resize to prevent stretching
@@ -161,8 +163,8 @@ const Ballpit: React.FC<BallpitProps> = ({
     return () => {
       window.removeEventListener("resize", onWindowResize);
       renderer.dispose();
-      if (mountRef.current) {
-        mountRef.current.innerHTML = "";
+      if (mountNode) {
+        mountNode.innerHTML = "";
       }
     };
   }, [
