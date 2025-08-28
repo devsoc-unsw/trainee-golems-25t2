@@ -1,10 +1,12 @@
 import { Navbar } from "../Components/Navbar";
+import Sidebar from "../Components/Sidebar";
 
 function About() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+      <Sidebar />
+      <div className="w-full sm:px-6 lg:px-8 md:ml-[calc(var(--sidebar-width,16rem))] duration-500 delay-100">
+        <Navbar />
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 mb-8">
             About This Project
