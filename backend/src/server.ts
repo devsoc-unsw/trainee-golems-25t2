@@ -13,33 +13,33 @@ app.use(express.json());
 dotenv.config();
 
 function startServer() {
-  try {
-    loadData();
+	try {
+		loadData();
 
-    app.listen(port, () => {
-      console.log(`Spotz server is running at http://localhost:${port}`);
-    });
+		app.listen(port, () => {
+			console.log(`Spotz server is running at http://localhost:${port}`);
+		});
 
-    // Routes & middleware
-    app.use(express.json());
-    app.use(
-      cors({
-        origin: "http://localhost:5173",
-        credentials: true,
-      })
-    );
-    app.use("", authRoutes);
-    app.use(errorMiddleware);
-  } catch (error) {
-    console.error("Error starting the server:", error);
-    process.exit(1);
-  }
+		// Routes & middleware
+		app.use(express.json());
+		app.use(
+			cors({
+				origin: "http://localhost:5173",
+				credentials: true,
+			})
+		);
+		app.use("", authRoutes);
+		app.use(errorMiddleware);
+	} catch (error) {
+		console.error("Error starting the server:", error);
+		process.exit(1);
+	}
 }
 
 startServer();
 
 // closing the server
 process.on("SIGINT", () => {
-  console.log("Shutting down server.");
-  process.exit();
+	console.log("Shutting down server.");
+	process.exit();
 });
