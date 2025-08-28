@@ -9,14 +9,7 @@ import { MdOutlineSell } from "react-icons/md";
 import { LuHouse } from "react-icons/lu";
 import { CgProfile } from "react-icons/cg";
 
-interface SidebarProps {
-  // image: string;
-  // posx: string;
-  // posy: string;
-  // rotate: string;
-}
-
-const Sidebar: React.FC<SidebarProps> = () => {
+const Sidebar = () => {
   const [collapsed, setCollapsed] = useState(false);
   const widthClass = collapsed ? "md:w-16" : "md:w-64";
 
