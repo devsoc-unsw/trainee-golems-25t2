@@ -6,47 +6,46 @@ import { ErrorMap, StatusCodeMap } from "./constants/errors";
 
 // Session check middleware
 async function sessionMiddleware(
-  req: Request,
-  _res: Response,
-  next: NextFunction
+	req: Request,
+	_res: Response,
+	next: NextFunction
 ) {
-  try {
-    const sessionId = req.cookies.sessionId;
-    
-    if (!sessionId) {
-      return next({
-        status: StatusCodeMap[ErrorMap["INVALID_SESSION"]],
-        message: ErrorMap["INVALID_SESSION"],
-      });
-    }
+	try {
+		const sessionId = req.cookies.sessionId;
 
-    const isValid = await isValidSession(sessionId);
-    
-    if (!isValid) {
-      return next({
-        status: StatusCodeMap[ErrorMap["INVALID_SESSION"]],
-        message: ErrorMap["INVALID_SESSION"],
-      });
-    }
+		if (!sessionId) {
+			return next({
+				status: StatusCodeMap[ErrorMap["INVALID_SESSION"]],
+				message: ErrorMap["INVALID_SESSION"],
+			});
+		}
 
-    next();
-  } catch (e) {
-    console.error("Session Middleware Error:", e);
-    return next(e);
-  }
+		const isValid = await isValidSession(sessionId);
+
+		if (!isValid) {
+			return next({
+				status: StatusCodeMap[ErrorMap["INVALID_SESSION"]],
+				message: ErrorMap["INVALID_SESSION"],
+			});
+		}
+
+		next();
+	} catch (e) {
+		console.error("Session Middleware Error:", e);
+		return next(e);
+	}
 }
 
 // Error catching and throwing middleware
 function errorMiddleware(
-  err: Error,
-  _req: Request,
-  res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _next: NextFunction
+	err: Error,
+	_req: Request,
+	res: Response,
+	_next: NextFunction
 ) {
-  const message = err.message;
-  const status = StatusCodeMap[message];
-  res.status(status).json({ error: message });
+	const message = err.message;
+	const status = StatusCodeMap[message];
+	res.status(status).json({ error: message });
 }
 
 export { errorMiddleware, sessionMiddleware };
