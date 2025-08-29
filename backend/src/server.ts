@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/auth.routes";
+import userRoutes from "./routes/user.routes";
 import { errorMiddleware } from "./middleware";
 import { loadData } from "./dataStore";
 
@@ -28,6 +29,7 @@ function startServer() {
       })
     );
     app.use("", authRoutes);
+    app.use("/api/user", userRoutes);
     app.use(errorMiddleware);
   } catch (error) {
     console.error("Error starting the server:", error);

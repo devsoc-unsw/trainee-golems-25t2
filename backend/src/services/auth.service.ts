@@ -12,7 +12,8 @@ import {
 export async function authRegister(
   name: string,
   email: string,
-  password: string
+  password: string,
+  avatar?: string
 ) {
   // Validate input
   if (isValidName(name) !== true) {
@@ -42,6 +43,7 @@ export async function authRegister(
       name,
       email,
       password, // In production, hash this password!
+      avatar,
     },
   });
 
