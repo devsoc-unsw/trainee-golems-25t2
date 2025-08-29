@@ -1,10 +1,9 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/server.ts",
+    "dev": "nodemon",
     "build": "tsc",
     "start": "node dist/server.js",
     "lint": "eslint src --ext .ts --report-unused-disable-directives --max-warnings 0",
