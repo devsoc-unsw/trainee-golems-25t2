@@ -16,6 +16,7 @@ export type User = {
   email: Email;
   password: Password;
   userId: UserId;
+  avatar?: String;
 };
 
 // types for dataStore

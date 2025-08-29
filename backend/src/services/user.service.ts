@@ -1,11 +1,17 @@
 import { prisma } from "../lib/prisma";
 
-export async function createUser(email: string, name: string, password: string) {
+export async function createUser(
+  email: string,
+  name: string,
+  password: string,
+  avatar?: string
+) {
   return await prisma.user.create({
     data: {
       email,
       name,
       password,
+      avatar,
     },
   });
 }
