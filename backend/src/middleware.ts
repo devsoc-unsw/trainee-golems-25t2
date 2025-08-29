@@ -12,7 +12,7 @@ async function sessionMiddleware(
 ) {
   try {
     const sessionId = req.cookies.sessionId;
-    
+
     if (!sessionId) {
       return next({
         status: StatusCodeMap[ErrorMap["INVALID_SESSION"]],
@@ -21,7 +21,7 @@ async function sessionMiddleware(
     }
 
     const isValid = await isValidSession(sessionId);
-    
+
     if (!isValid) {
       return next({
         status: StatusCodeMap[ErrorMap["INVALID_SESSION"]],
@@ -41,7 +41,6 @@ function errorMiddleware(
   err: Error,
   _req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _next: NextFunction
 ) {
   const message = err.message;
