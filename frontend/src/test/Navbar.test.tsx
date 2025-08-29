@@ -11,7 +11,6 @@ const renderNavbar = (props = {}) => {
 };
 
 describe("Navbar", () => {
-
   test("renders with custom brand name", () => {
     renderNavbar({ brandName: "StuVerse" });
     const brandElement = screen.getByText("StuVerse");
