@@ -1,20 +1,6 @@
 import { prisma } from "../lib/prisma";
-
-export async function createUser(
-  email: string,
-  name: string,
-  password: string,
-  avatar?: string
-) {
-  return await prisma.user.create({
-    data: {
-      email,
-      name,
-      password,
-      avatar,
-    },
-  });
-}
+import * as authService from "./auth.service";
+import { ErrorMap } from "../constants/errors";
 
 export async function getUserById(id: string) {
   return await prisma.user.findUnique({
@@ -46,4 +32,16 @@ export async function deleteUser(id: string) {
 
 export async function getAllUsers() {
   return await prisma.user.findMany();
+}
+
+export async function getUserProfile(sessionId: string) {
+  const user = await authService.getUserBySession(sessionId);
+  if (!user) {
+    throw new Error(ErrorMap.INVALID_SESSION);
+  }
+  return {
+    username: user.name,
+    email: user.email,
+    avatar: user.avatar || "default_profile_pic_url",
+  };
 }

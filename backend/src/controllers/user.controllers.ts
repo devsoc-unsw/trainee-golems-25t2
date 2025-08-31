@@ -1,26 +1,19 @@
 import { Request, Response } from "express";
-import { ErrorMap, StatusCodeMap } from "../constants/errors";
-import * as authService from "../services/auth.service";
+import { StatusCodeMap } from "../constants/errors";
+import * as userService from "../services/user.service";
 
-async function getUserProfile(req: Request, res: Response) {
+async function profile(req: Request, res: Response) {
   try {
     const sessionId = req.cookies.sessionId;
-    const user = await authService.getUserBySession(sessionId);
-    if (!user) {
-      throw new Error(ErrorMap.USER_DOES_NOT_EXIST);
-    }
-    res.json({
-      username: user.name,
-      email: user.email,
-      avatar: user.avatar || "default_profile_pic_url",
-    });
+    const profile = await userService.getUserProfile(sessionId);
+    res.json(profile);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "An error occurred";
     const statusCode = StatusCodeMap[message] || 500;
     res.status(statusCode).json({
-      error: message,
+      error: message
     });
   }
 }
 
-export { getUserProfile }
+export { profile }
