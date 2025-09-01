@@ -20,7 +20,8 @@ model User {
   password  String
   userId    Int       @unique @default(autoincrement())
   sessions  Session[]
-  Notes     Note[]
+  notes     Note[]
+  accoms    Accommodation[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -40,6 +41,18 @@ model Note {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title     String   
   content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Accommodation {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  location  String
+  type      String
+  status    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

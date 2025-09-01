@@ -16,6 +16,19 @@ export async function getRecentNotesByUser(userId: string) {
   });
 }
 
+export async function getAccommodationByUser(userId: string) {
+  return await prisma.accommodation.findMany({
+    select: {
+      id: true,
+      name: true,
+      location: true,
+      status: true,
+    },
+    where: { userId },
+    take: 3,
+  });
+}
+
 export async function getDashboardSummary(sessionId: string) {
   let greeting = "Good Morning";
   const hours = new Date().getHours();
@@ -29,14 +42,14 @@ export async function getDashboardSummary(sessionId: string) {
   if (!user) {
     throw new Error(ErrorMap.USER_DOES_NOT_EXIST);
   }
-
   const recent_notes = await getRecentNotesByUser(user.id);
+  const accommodation_status = await getAccommodationByUser(user.id);
 
   return {
     greeting,
     username: user.name,
     recent_notes,
-    accommodation_status: {},
+    accommodation_status,
     weekly_progress: [],
   };
 }
