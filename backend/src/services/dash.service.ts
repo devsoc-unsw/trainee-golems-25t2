@@ -41,6 +41,41 @@ export async function getMarketplaceItemByUser(userId: string) {
   });
 }
 
+export async function getWeeklyProgressByUser(userId: string) {
+  const now = new Date();
+  const startOfWeek = new Date();
+  startOfWeek.setDate(now.getDate() - 6);
+  return await prisma.studySession.findMany({
+    select: {
+      id: true,
+      startTime: true,
+      endTime: true,
+    },
+    where: {
+      userId,
+      startTime: {
+        gte: startOfWeek,
+        lte: new Date(),
+      },
+    },
+  });
+}
+
+export async function getStatsByUser(userId: string) {
+  const studySessions = await getWeeklyProgressByUser(userId);
+  const totalDuration = studySessions.reduce((sum, s) => {
+    if (!s.endTime) {
+      return sum;
+    } else {
+      return sum + (s.endTime.getTime() - s.startTime.getTime()) / 1000;
+    }
+  }, 0);
+  const dayStreaks = new Set(
+    studySessions.map((s) => s.startTime.toDateString())
+  ).size;
+  return { totalDuration, dayStreaks };
+}
+
 export async function getDashboardSummary(sessionId: string) {
   let greeting = "Good Morning";
   const hours = new Date().getHours();
@@ -57,6 +92,7 @@ export async function getDashboardSummary(sessionId: string) {
   const recent_notes = await getRecentNotesByUser(user.id);
   const accommodation_status = await getAccommodationByUser(user.id);
   const marketplace_items = await getMarketplaceItemByUser(user.id);
+  const weekly_progress = await getWeeklyProgressByUser(user.id);
 
   return {
     greeting,
@@ -64,6 +100,6 @@ export async function getDashboardSummary(sessionId: string) {
     recent_notes,
     accommodation_status,
     marketplace_items,
-    weekly_progress: [],
+    weekly_progress,
   };
 }

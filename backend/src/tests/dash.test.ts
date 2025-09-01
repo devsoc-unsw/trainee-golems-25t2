@@ -66,6 +66,21 @@ beforeAll(async () => {
       price: 50,
     },
   });
+
+  await prisma.studySession.createMany({
+    data: [
+      {
+        userId: testUserId,
+        startTime: new Date(),
+        endTime: new Date(),
+      },
+      {
+        userId: testUserId,
+        startTime: new Date(),
+        endTime: new Date(),
+      },
+    ],
+  });
 });
 
 afterAll(async () => {
@@ -120,5 +135,17 @@ describe("dashboard summary endpoint", () => {
       location: "1 Barker St",
       status: "pending",
     });
+    expect(body.weekly_progress).toStrictEqual([
+      {
+        id: expect.any(String),
+        startTime: expect.any(String),
+        endTime: expect.any(String) 
+      },
+      {
+        id: expect.any(String),
+        startTime: expect.any(String),
+        endTime: expect.any(String) 
+      },
+    ]);
   });
 });
