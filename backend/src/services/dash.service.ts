@@ -17,7 +17,7 @@ export async function getRecentNotesByUser(userId: string) {
 }
 
 export async function getAccommodationByUser(userId: string) {
-  return await prisma.accommodation.findMany({
+  return await prisma.accommodation.findFirst({
     select: {
       id: true,
       name: true,
@@ -25,7 +25,19 @@ export async function getAccommodationByUser(userId: string) {
       status: true,
     },
     where: { userId },
-    take: 3,
+  });
+}
+
+export async function getMarketplaceItemByUser(userId: string) {
+  return await prisma.marketplaceItem.findMany({
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      price: true,
+      status: true,
+    },
+    where: { userId },
   });
 }
 
@@ -44,12 +56,14 @@ export async function getDashboardSummary(sessionId: string) {
   }
   const recent_notes = await getRecentNotesByUser(user.id);
   const accommodation_status = await getAccommodationByUser(user.id);
+  const marketplace_items = await getMarketplaceItemByUser(user.id);
 
   return {
     greeting,
     username: user.name,
     recent_notes,
     accommodation_status,
+    marketplace_items,
     weekly_progress: [],
   };
 }

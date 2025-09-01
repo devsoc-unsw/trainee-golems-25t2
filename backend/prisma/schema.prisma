@@ -22,6 +22,7 @@ model User {
   sessions  Session[]
   notes     Note[]
   accoms    Accommodation[]
+  items     MarketplaceItem[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }
@@ -55,4 +56,16 @@ model Accommodation {
   status    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model MarketplaceItem {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  price       Float
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

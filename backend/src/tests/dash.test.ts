@@ -56,6 +56,16 @@ beforeAll(async () => {
       status: "pending",
     },
   });
+
+  await prisma.marketplaceItem.create({
+    data: {
+      userId: testUserId,
+      title: "Sample Product",
+      description: "Sample Description",
+      status: "available",
+      price: 50,
+    },
+  });
 });
 
 afterAll(async () => {
@@ -63,6 +73,7 @@ afterAll(async () => {
   await prisma.session.deleteMany({ where: { userId: testUserId } });
   await prisma.note.deleteMany({ where: { userId: testUserId } });
   await prisma.accommodation.deleteMany({ where: { userId: testUserId } });
+  await prisma.marketplaceItem.deleteMany({ where: { userId: testUserId } });
   await prisma.$disconnect();
 });
 
@@ -103,13 +114,11 @@ describe("dashboard summary endpoint", () => {
         updatedAt: expect.any(String),
       },
     ]);
-    expect(body.accommodation_status).toStrictEqual([
-      {
-        id: expect.any(String),
-        name: "Apartment A",
-        location: "1 Barker St",
-        status: "pending",
-      },
-    ]);
+    expect(body.accommodation_status).toStrictEqual({
+      id: expect.any(String),
+      name: "Apartment A",
+      location: "1 Barker St",
+      status: "pending",
+    });
   });
 });
