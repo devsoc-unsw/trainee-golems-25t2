@@ -7,6 +7,7 @@ export type Password = string; // greater than 6 characters & (?=.*\d)(?=.*[a-z]
 export type NoteId = string;
 export type NoteTitle = string;
 export type NoteContent = string;
+export type AvatarURL = string;
 
 export type Session = {
   _id?: string;
@@ -19,6 +20,7 @@ export type User = {
   email: Email;
   password: Password;
   userId: UserId;
+  avatar?: AvatarURL;
 };
 
 export type Note = {

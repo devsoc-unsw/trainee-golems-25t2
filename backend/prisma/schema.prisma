@@ -18,6 +18,7 @@ model User {
   email     String    @unique
   name      String
   password  String
+  avatar    String?
   userId    Int       @unique @default(autoincrement())
   sessions  Session[]
   notes     Note[]
