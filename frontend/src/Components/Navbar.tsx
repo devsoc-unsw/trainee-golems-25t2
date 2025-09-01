@@ -20,12 +20,6 @@ export const Navbar = ({ brandName, className = "" }: NavbarProps) => {
           {/* Navigation Links - centered */}
           <div className="flex space-x-8">
             <Link
-              to="/about"
-              className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              About
-            </Link>
-            <Link
               to="/features"
               className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
