@@ -54,8 +54,8 @@ function hexToRgb(hex: string) {
 }
 
 const DotGrid: React.FC<DotGridProps> = ({
-  dotSize = 16,
-  gap = 32,
+  dotSize = 12,
+  gap = 80,
   baseColor = "#5227FF",
   activeColor = "#5227FF",
   proximity = 150,
@@ -126,7 +126,13 @@ const DotGrid: React.FC<DotGridProps> = ({
       for (let x = 0; x < cols; x++) {
         const cx = startX + x * cell;
         const cy = startY + y * cell;
-        dots.push({ cx, cy, xOffset: 0, yOffset: 0, _inertiaApplied: false });
+        dots.push({
+          cx,
+          cy,
+          xOffset: 0,
+          yOffset: 0,
+          _inertiaApplied: false,
+        });
       }
     }
     dotsRef.current = dots;
@@ -154,6 +160,13 @@ const DotGrid: React.FC<DotGridProps> = ({
         const dy = dot.cy - py;
         const dsq = dx * dx + dy * dy;
 
+        // Calculate fade effect based on Y position (top = faded, bottom = more visible)
+        const canvas = canvasRef.current;
+        const fadeStart = 0; // Start with 10% opacity at top
+        const fadeEnd = 0.6; // End with 60% opacity at bottom
+        const fadeProgress = oy / (canvas?.height || 1);
+        const baseOpacity = fadeStart + (fadeEnd - fadeStart) * fadeProgress;
+
         let style = baseColor;
         if (dsq <= proxSq) {
           const dist = Math.sqrt(dsq);
@@ -166,6 +179,7 @@ const DotGrid: React.FC<DotGridProps> = ({
 
         ctx.save();
         ctx.translate(ox, oy);
+        ctx.globalAlpha = baseOpacity;
         ctx.fillStyle = style;
         ctx.fill(circlePath);
         ctx.restore();
@@ -227,8 +241,8 @@ const DotGrid: React.FC<DotGridProps> = ({
         if (speed > speedTrigger && dist < proximity && !dot._inertiaApplied) {
           dot._inertiaApplied = true;
           gsap.killTweensOf(dot);
-          const pushX = dot.cx - pr.x + vx * 0.005;
-          const pushY = dot.cy - pr.y + vy * 0.005;
+          const pushX = dot.cx - pr.x + vx * 0.002;
+          const pushY = dot.cy - pr.y + vy * 0.002;
           gsap.to(dot, {
             inertia: { xOffset: pushX, yOffset: pushY, resistance },
             onComplete: () => {
@@ -255,8 +269,8 @@ const DotGrid: React.FC<DotGridProps> = ({
           dot._inertiaApplied = true;
           gsap.killTweensOf(dot);
           const falloff = Math.max(0, 1 - dist / shockRadius);
-          const pushX = (dot.cx - cx) * shockStrength * falloff;
-          const pushY = (dot.cy - cy) * shockStrength * falloff;
+          const pushX = (dot.cx - cx) * (shockStrength * 0.5) * falloff;
+          const pushY = (dot.cy - cy) * (shockStrength * 0.5) * falloff;
           gsap.to(dot, {
             inertia: { xOffset: pushX, yOffset: pushY, resistance },
             onComplete: () => {

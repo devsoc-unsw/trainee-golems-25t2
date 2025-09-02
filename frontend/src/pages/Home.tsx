@@ -1,14 +1,19 @@
 import FloatingIcon from "../Components/FloatingIcon";
 import { Navbar } from "../Components/Navbar";
-import productivity from "../assets/productivity.png";
-import marketplace from "../assets/marketplace.png";
-import accomodation from "../assets/accomodation.png";
-import aiLectureSlide from "../assets/ai-lecture-slides.png";
+import productivity from "../assets/icons/productivity.png";
+import marketplace from "../assets/icons/marketplace.png";
+import accomodation from "../assets/icons/accomodation.png";
+import aiLectureSlide from "../assets/icons/ai-lecture-slides.png";
 import DotGrid from "../Components/DotGrid";
 
 function Home() {
   const icons = [
-    { src: productivity, posx: "top-44", posy: "left-16", rotate: "rotate-12" },
+    {
+      src: productivity,
+      posx: "top-44",
+      posy: "left-16",
+      rotate: "rotate-12",
+    },
     {
       src: marketplace,
       posx: "bottom-44",
@@ -49,13 +54,14 @@ function Home() {
           shockStrength={5}
           resistance={750}
           returnDuration={1.5}
+          className="z-0"
         />
       </div>
-      <Navbar />
+      <Navbar brandName="StuVerse" className="relative z-50" />
       <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-            Welcome to MyApp
+            Your Student Assistant
           </h1>
           {icons.map(({ src, posx, posy, rotate }, index) => (
             <FloatingIcon
