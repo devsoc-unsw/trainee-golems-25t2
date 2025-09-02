@@ -116,12 +116,18 @@ const Ballpit: React.FC<BallpitProps> = ({
         // Wall bounce on X
         if (ball.position.x < -boundsX || ball.position.x > boundsX) {
           ball.userData.vx *= -wallBounce;
-          ball.position.x = Math.max(Math.min(ball.position.x, boundsX), -boundsX);
+          ball.position.x = Math.max(
+            Math.min(ball.position.x, boundsX),
+            -boundsX
+          );
         }
         // Wall bounce on Y
         if (ball.position.y < -boundsY || ball.position.y > boundsY) {
           ball.userData.vy *= -wallBounce;
-          ball.position.y = Math.max(Math.min(ball.position.y, boundsY), -boundsY);
+          ball.position.y = Math.max(
+            Math.min(ball.position.y, boundsY),
+            -boundsY
+          );
         }
         // Wall bounce on Z
         if (ball.position.z < -maxZ || ball.position.z > maxZ) {
@@ -152,7 +158,8 @@ const Ballpit: React.FC<BallpitProps> = ({
       renderer.setSize(width, height);
 
       // Recalculate visible bounds on resize
-      visibleHeight = 2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.z;
+      visibleHeight =
+        2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.z;
       visibleWidth = visibleHeight * camera.aspect;
       boundsX = visibleWidth / 2;
       boundsY = visibleHeight / 2;

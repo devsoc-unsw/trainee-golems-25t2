@@ -7,10 +7,10 @@ import { FaRegNoteSticky } from "react-icons/fa6";
 import { FaArrowUpRightDots } from "react-icons/fa6";
 import { MdOutlineSell } from "react-icons/md";
 import { LuHouse } from "react-icons/lu";
-import { CgProfile } from "react-icons/cg";
+import UserInfoSummary from "./UserInfoSummary";
 
 const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState<boolean>(false);
   const widthClass = collapsed ? "md:w-16" : "md:w-64";
 
   const navItems = [
@@ -35,7 +35,7 @@ const Sidebar = () => {
     <aside
       className={` md:flex ${widthClass} md:flex-col md:fixed md:inset-y-0 border-4 border-neutral-200 
 								bg-white/70 supports-[backdrop-filter]:bg-white/60 backdrop-blur rounded-[3rem] 
-								duration-500 delay-100 mt-3 ml-3 mr-3 mb-6 h-full`}
+								duration-500 delay-100 mt-3 ml-3 mr-3 mb-6 h-full 4rem`}
     >
       <div
         className={`w-full rounded-t-[3rem] py-4 ${
@@ -64,7 +64,7 @@ const Sidebar = () => {
           } `}
           onClick={() => setCollapsed(!collapsed)}
         >
-          <RxHamburgerMenu className="size-6 font-bol self-center" />
+          <RxHamburgerMenu className="size-6 font-bold self-center" />
         </button>
       </div>
 
@@ -84,11 +84,7 @@ const Sidebar = () => {
             }`}
           >
             {item.icon}
-            {!collapsed && (
-              <span className={`${collapsed ? "hidden" : "block"}`}>
-                {item.name}
-              </span>
-            )}
+            {!collapsed && <span>{item.name}</span>}
           </button>
         ))}
         <div className="border-2 border-gray-400 rounded-lg my-2" />
@@ -99,23 +95,11 @@ const Sidebar = () => {
           }`}
         >
           <IoSettingsOutline className="size-6" />
-          {!collapsed && (
-            <span className={`${collapsed ? "hidden" : "block"}`}>
-              Settings
-            </span>
-          )}
+          {!collapsed && <span>Settings</span>}
         </div>
       </div>
 
-      <button className="mt-auto flex items-center justify-between w-full mb-10 border-2 bortder-gray-400 rounded-[3rem] h-14 p-2">
-        <CgProfile className="size-10 font-bol self-center" />
-        {!collapsed && (
-          <div className="w-full px-4">
-            <p className={`font-semibold text-sm`}>Example</p>
-            <p className={`text-xs`}>Example@gmail.com</p>
-          </div>
-        )}
-      </button>
+      <UserInfoSummary collapsed={collapsed} />
     </aside>
   );
 };
