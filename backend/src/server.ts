@@ -1,15 +1,22 @@
 import dotenv from "dotenv";
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes";
+import dashRoutes from "./routes/dash.routes";
 import userRoutes from "./routes/user.routes";
 import { errorMiddleware } from "./middleware";
 import { loadData } from "./dataStore";
 
-const app = express();
+export const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
+app.use(cookieParser());
+app.use("", authRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/dashboard", dashRoutes);
+app.use(errorMiddleware);
 
 dotenv.config();
 
@@ -28,16 +35,15 @@ function startServer() {
         credentials: true,
       })
     );
-    app.use("", authRoutes);
-    app.use("/api/user", userRoutes);
-    app.use(errorMiddleware);
   } catch (error) {
     console.error("Error starting the server:", error);
     process.exit(1);
   }
 }
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
 
 // closing the server
 process.on("SIGINT", () => {
