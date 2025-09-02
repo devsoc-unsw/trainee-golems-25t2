@@ -23,7 +23,7 @@ const Landing: React.FC = () => {
 
         {/* Enter Button */}
         <button
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/dashboard")}
           className="mt-6 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white text-lg font-semibold rounded-2xl shadow-lg transition"
         >
           Enter
