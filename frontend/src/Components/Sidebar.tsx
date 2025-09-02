@@ -84,11 +84,7 @@ const Sidebar = () => {
             }`}
           >
             {item.icon}
-            {!collapsed && (
-              <span className={`${collapsed ? "hidden" : "block"}`}>
-                {item.name}
-              </span>
-            )}
+            {!collapsed && <span>{item.name}</span>}
           </button>
         ))}
         <div className="border-2 border-gray-400 rounded-lg my-2" />
@@ -99,11 +95,7 @@ const Sidebar = () => {
           }`}
         >
           <IoSettingsOutline className="size-6" />
-          {!collapsed && (
-            <span className={`${collapsed ? "hidden" : "block"}`}>
-              Settings
-            </span>
-          )}
+          {!collapsed && <span>Settings</span>}
         </div>
       </div>
 
