@@ -63,7 +63,7 @@ export async function getWeeklyProgressByUser(userId: string) {
 
 export async function getStatsByUser(userId: string) {
   const studySessions = await getWeeklyProgressByUser(userId);
-  const totalDuration = studySessions.reduce((sum, s) => {
+  const totalDuration = studySessions.reduce((sum: number, s: { endTime: Date | null; startTime: Date }) => {
     if (!s.endTime) {
       return sum;
     } else {
@@ -71,7 +71,7 @@ export async function getStatsByUser(userId: string) {
     }
   }, 0);
   const dayStreaks = new Set(
-    studySessions.map((s) => s.startTime.toDateString())
+    studySessions.map((s: { startTime: Date }) => s.startTime.toDateString())
   ).size;
   return { totalDuration, dayStreaks };
 }
