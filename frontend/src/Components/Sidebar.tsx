@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
 import stuverse from "../assets/stuverse-logo.png";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -8,9 +8,10 @@ import { FaArrowUpRightDots } from "react-icons/fa6";
 import { MdOutlineSell } from "react-icons/md";
 import { LuHouse } from "react-icons/lu";
 import UserInfoSummary from "./UserInfoSummary";
+import { useSidebar } from "../hooks/useSidebar";
 
 const Sidebar = () => {
-  const [collapsed, setCollapsed] = useState<boolean>(false);
+  const { collapsed, toggleCollapsed } = useSidebar();
   const widthClass = collapsed ? "md:w-16" : "md:w-64";
 
   const navItems = [
@@ -62,7 +63,7 @@ const Sidebar = () => {
               ? "flex w-full justify-center rotate-90 duration-500 delay-100"
               : "duration-500 delay-100"
           } `}
-          onClick={() => setCollapsed(!collapsed)}
+          onClick={toggleCollapsed}
         >
           <RxHamburgerMenu className="size-6 font-bold self-center" />
         </button>
