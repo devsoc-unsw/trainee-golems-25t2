@@ -7,7 +7,7 @@ const Landing: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white relative overflow-hidden">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white relative overflow-hidden transition-colors duration-300">
       {/* Ball Pit animation */}
       <Ballpit />
 
@@ -17,7 +17,7 @@ const Landing: React.FC = () => {
         <h1 className="text-4xl md:text-5xl font-bold mb-4 flex items-center gap-2 drop-shadow-lg">
           Your Student Assistance Tool
         </h1>
-        <h2 className="text-2xl md:text-3xl font-semibold mb-8 text-blue-300 drop-shadow-lg">
+        <h2 className="text-2xl md:text-3xl font-semibold mb-8 text-blue-600 dark:text-blue-300 drop-shadow-lg transition-colors duration-300">
           All-In-One Place
         </h2>
 
