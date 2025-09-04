@@ -16,14 +16,14 @@ function Home() {
     },
     {
       src: marketplace,
-      posx: "bottom-44",
+      posx: "bottom-60",
       posy: "right-20",
       rotate: "rotate-6",
     },
     {
       src: accomodation,
       posx: "bottom-60",
-      posy: "left-36",
+      posy: "left-40",
       rotate: "-rotate-6",
     },
     {
