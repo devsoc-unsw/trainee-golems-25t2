@@ -17,6 +17,7 @@ const UserInfoSummary: React.FC<UserInfoSummaryProps> = ({ collapsed }) => {
         const data = await fetchUserProfile();
         setUser(data);
       } catch (err) {
+        console.error(err);
         setError("Failed to load user info");
       } finally {
         setLoading(false);
