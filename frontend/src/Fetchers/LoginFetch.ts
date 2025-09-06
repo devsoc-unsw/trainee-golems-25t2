@@ -27,3 +27,15 @@ export const fetchUserProfile = async () => {
         throw error;
     }
 };
+
+export const logoutUser = async () => {
+    try {
+        const response = await axios.post(`${URL}/auth/logout`, {}, {
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to logout:', error);
+        throw error;
+    }
+};
