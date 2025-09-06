@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IoPause, IoPlay } from "react-icons/io5";
 
 type SessionType = "Focus" | "Break";
-const durations = [15, 20, 25, 30, 45, 60];
+const durations = [1, 15, 20, 25, 30, 45, 60];
 
 const Timer: React.FC = () => {
     const [minutes, setMinutes] = React.useState(25);
@@ -10,16 +10,32 @@ const Timer: React.FC = () => {
     const [isActive, setIsActive] = React.useState(false);
     const [sessionType, setSessionType] = React.useState<SessionType>("Focus");
 
-    React.useEffect(() => {
+    const requestNotificationPermission = async () => {
+        await Notification.requestPermission();
+    };
+
+    const showNotification = (title: string, body: string) => {
+        if (Notification.permission === "granted") {
+            new Notification(title, { body });
+        }
+    };
+
+    useEffect(() => {
+        requestNotificationPermission();
+    }, []);
+
+    useEffect(() => {
         let interval: NodeJS.Timeout;
         if (isActive) {
             interval = setInterval(() => {
                 if (minutes === 0 && seconds === 0) {
                     if (sessionType === "Focus") {
+                        showNotification("Pomodoro Timer", "Focus session done! Time for a break.");
                         setSessionType("Break");
                         setMinutes(5);
                         setSeconds(0);
                     } else {
+                        showNotification("Pomodoro Timer", "Break session done! Time to focus.");
                         setSessionType("Focus");
                         setMinutes(25);
                         setSeconds(0);
@@ -38,7 +54,7 @@ const Timer: React.FC = () => {
     const toggle = () => {
         setIsActive(!isActive);
     };
-    
+
     const reset = () => {
         setSessionType("Focus");
         setIsActive(false);
@@ -54,53 +70,53 @@ const Timer: React.FC = () => {
     }
 
     return (
-  <div className={`flex flex-col items-center gap-4 p-4 
+        <div className={`flex flex-col items-center gap-4 p-4 
                   ${sessionType === "Focus" ? "text-blue-400" : "text-orange-400"}`}>
-    
-    {/* Session Type */}
-    <h2 className="text-xl font-semibold">{sessionType} Time</h2>
 
-    {/* Timer Circle */}
-    <div className="relative flex flex-col items-center justify-center w-48 h-48 rounded-full border-4 
+            {/* Session Type */}
+            <h2 className="text-xl font-semibold">{sessionType} Time</h2>
+
+            {/* Timer Circle */}
+            <div className="relative flex flex-col items-center justify-center w-48 h-48 rounded-full border-4 
                     border-current">
-      
-      {/* Time Display */}
-      <span className="text-4xl font-bold">
-        {minutes.toString().padStart(2, "0")}:
-        {seconds.toString().padStart(2, "0")}
-      </span>
 
-      {/* Start / Pause Button with Icon */}
-      <button
-        className="mt-4 p-3 rounded-full bg-white text-black shadow hover:bg-gray-200 transition"
-        onClick={toggle}
-      >
-        {isActive ? <IoPause size={24} /> : <IoPlay size={24} />}
-      </button>
+                {/* Time Display */}
+                <span className="text-4xl font-bold">
+                    {minutes.toString().padStart(2, "0")}:
+                    {seconds.toString().padStart(2, "0")}
+                </span>
 
-      {/* Reset Button */}
-      <button
-        className="mt-2 px-4 py-2 rounded-full bg-white text-black shadow hover:bg-gray-200 transition"
-        onClick={reset}
-      >
-        Reset
-      </button>
-    </div>
+                {/* Start / Pause Button with Icon */}
+                <button
+                    className="mt-4 p-3 rounded-full bg-white text-black shadow hover:bg-gray-200 transition"
+                    onClick={toggle}
+                >
+                    {isActive ? <IoPause size={24} /> : <IoPlay size={24} />}
+                </button>
 
-    {/* Duration Buttons */}
-    <div className="flex gap-2 mt-4 flex-wrap justify-center">
-      {durations.map((d) => (
-        <button
-          key={d}
-          className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 shadow transition"
-          onClick={() => setDuration(d)}
-        >
-          {d} min
-        </button>
-      ))}
-    </div>
-  </div>
-);
+                {/* Reset Button */}
+                <button
+                    className="mt-2 px-4 py-2 rounded-full bg-white text-black shadow hover:bg-gray-200 transition"
+                    onClick={reset}
+                >
+                    Reset
+                </button>
+            </div>
+
+            {/* Duration Buttons */}
+            <div className="flex gap-2 mt-4 flex-wrap justify-center">
+                {durations.map((d) => (
+                    <button
+                        key={d}
+                        className="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200 shadow transition"
+                        onClick={() => setDuration(d)}
+                    >
+                        {d} min
+                    </button>
+                ))}
+            </div>
+        </div>
+    );
 
 }
 
