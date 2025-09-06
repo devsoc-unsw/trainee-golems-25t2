@@ -86,6 +86,8 @@ const Sidebar = () => {
             onClick={() => {
               if (item.name === "Productivity") {
                 navigate("/productivity");
+              } else if (item.name === "Dashboard") {
+                navigate("/dashboard");
               }
             }}
           >

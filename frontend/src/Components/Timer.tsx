@@ -33,11 +33,13 @@ const Timer: React.FC = () => {
                     if (sessionType === "Focus") {
                         showNotification("Pomodoro Timer", "Focus session done! Time for a break.");
                         setSessionType("Break");
-                        setDuration(5);
+                        setMinutes(5);
+                        setSeconds(0);
                     } else {
                         showNotification("Pomodoro Timer", "Break session done! Time to focus.");
                         setSessionType("Focus");
-                        setDuration(25);
+                        setMinutes(25);
+                        setSeconds(0);
                     }
                 } else if (seconds === 0) {
                     setMinutes((prev) => prev - 1);
