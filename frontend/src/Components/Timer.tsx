@@ -82,7 +82,7 @@ const Timer: React.FC = () => {
 		}
 
 		return () => clearInterval(interval);
-	}, [isActive, sessionType]);
+	}, [minutes, seconds, isActive, sessionType]);
 
 	const toggle = () => {
 		if (isActive) {
@@ -112,10 +112,10 @@ const Timer: React.FC = () => {
 
 	const changeDuration = (delta: number) => {
 		const totalSeconds = minutes * 60 + seconds + delta * 60;
-		const newMinutes = Math.floor(Math.max(totalSeconds, 1) / 60);
-		const newSeconds = Math.max(totalSeconds, 1) % 60;
-
 		if (totalSeconds <= 0) return;
+
+		const newMinutes = Math.floor(totalSeconds / 60);
+		const newSeconds = totalSeconds % 60;
 
 		setMinutes(newMinutes);
 		setSeconds(newSeconds);
