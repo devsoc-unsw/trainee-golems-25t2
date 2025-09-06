@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 
-interface ThemeToggleProps {
-  collapsed?: boolean;
-}
-
 const THEME_KEY = "theme";
 const DARK_CLASS = "dark";
 
-export default function ThemeToggle({
-  collapsed = false,
-}: ThemeToggleProps = {}) {
+export default function ThemeToggle() {
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(THEME_KEY);
@@ -33,23 +27,27 @@ export default function ThemeToggle({
   return (
     <button
       onClick={() => setDark((d) => !d)}
-      className="flex items-center justify-center w-12 h-12 rounded-full 
-                 bg-white/80 dark:bg-gray-800/80 
-                 border-2 border-gray-200 dark:border-gray-600
-                 shadow-lg hover:shadow-xl
-                 text-gray-700 dark:text-gray-200 
-                 hover:bg-white dark:hover:bg-gray-800
-                 hover:scale-110 active:scale-95
-                 backdrop-blur-sm
-                 transition-all duration-300 ease-in-out
-                 group"
+      className="relative w-14 h-7 rounded-full 
+                 bg-gray-200 dark:bg-gray-700
+                 border border-gray-300 dark:border-gray-600
+                 hover:bg-gray-300 dark:hover:bg-gray-600
+                 transition-colors duration-200 ease-in-out
+                 focus:outline-none"
       aria-label="Toggle dark mode"
     >
-      <div className="relative">
+      {/* Switch Thumb */}
+      <div
+        className={`absolute top-0.5 w-6 h-6 rounded-full 
+                   bg-white dark:bg-gray-800
+                   shadow-sm border border-gray-200 dark:border-gray-600
+                   transition-transform duration-200 ease-in-out
+                   flex items-center justify-center
+                   ${dark ? "translate-x-6" : "translate-x-0.5"}`}
+      >
         {dark ? (
-          <FaSun className="text-yellow-500 text-lg group-hover:text-yellow-400 transition-colors" />
+          <FaMoon className="text-gray-600 text-xs" />
         ) : (
-          <FaMoon className="text-blue-600 text-lg group-hover:text-blue-500 transition-colors" />
+          <FaSun className="text-gray-600 text-xs" />
         )}
       </div>
     </button>
