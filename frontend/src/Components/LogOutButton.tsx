@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { IoIosLogOut } from "react-icons/io";
 import { logoutUser } from "../Fetchers/LoginFetch";
 
@@ -7,9 +8,11 @@ interface LogoutButtonProps {
 }
 
 const LogoutButton: React.FC<LogoutButtonProps> = ({ collapsed }) => {
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       await logoutUser();
+      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }
