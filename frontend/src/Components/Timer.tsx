@@ -13,12 +13,32 @@ const Timer: React.FC = () => {
 	const endTimeRef = React.useRef<number | null>(null);
 
 	const requestNotificationPermission = async () => {
-		await Notification.requestPermission();
+		if (!("Notification" in window)) {
+			console.warn("This browser does not support desktop notifications.");
+			return;
+		}
+
+		try {
+			const permission = await Notification.requestPermission();
+			if (permission === "granted") {
+				console.log("Notification permission granted.");
+			} else if (permission === "denied") {
+				console.warn("Notification permission denied.");
+			}
+		} catch (error) {
+			console.error("Error requesting notification permission:", error);
+		}
 	};
 
 	const showNotification = (title: string, body: string) => {
+		if (!("Notification" in window)) return;
+
 		if (Notification.permission === "granted") {
-			new Notification(title, { body });
+			try {
+				new Notification(title, { body });
+			} catch (error) {
+				console.error("Failed to show notification:", error);
+			}
 		}
 	};
 
@@ -106,7 +126,7 @@ const Timer: React.FC = () => {
 	};
 
 	return (
-		<div className={`flex flex-col items-center gap-4 p-4 rounded-2xl border-4 shadow-md
+		<div className={`inline-flex flex-col items-center gap-4 p-4 rounded-2xl border-4 shadow-md
                   ${sessionType === "Focus" ? "border-blue-400 text-blue-400" : "border-orange-400 text-orange-400"}`}>
 
 			{/* Session Type */}
