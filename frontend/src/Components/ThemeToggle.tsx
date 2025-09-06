@@ -8,7 +8,9 @@ interface ThemeToggleProps {
 const THEME_KEY = "theme";
 const DARK_CLASS = "dark";
 
-export default function ThemeToggle({ collapsed = false }: ThemeToggleProps) {
+export default function ThemeToggle({
+  collapsed = false,
+}: ThemeToggleProps = {}) {
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(THEME_KEY);
@@ -29,23 +31,27 @@ export default function ThemeToggle({ collapsed = false }: ThemeToggleProps) {
   }, [dark]);
 
   return (
-    <div
-      className={`flex items-center justify-center w-full ${
-        collapsed ? "flex-col" : "flex-row"
-      }`}
+    <button
+      onClick={() => setDark((d) => !d)}
+      className="flex items-center justify-center w-12 h-12 rounded-full 
+                 bg-white/80 dark:bg-gray-800/80 
+                 border-2 border-gray-200 dark:border-gray-600
+                 shadow-lg hover:shadow-xl
+                 text-gray-700 dark:text-gray-200 
+                 hover:bg-white dark:hover:bg-gray-800
+                 hover:scale-110 active:scale-95
+                 backdrop-blur-sm
+                 transition-all duration-300 ease-in-out
+                 group"
+      aria-label="Toggle dark mode"
     >
-      <button
-        onClick={() => setDark((d) => !d)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg 
-                   bg-gray-200 dark:bg-gray-700 
-                   text-gray-800 dark:text-gray-100 
-                   hover:bg-gray-300 dark:hover:bg-gray-600 
-                   transition"
-        aria-label="Toggle dark mode"
-      >
-        {dark ? <FaSun className="text-yellow-400" /> : <FaMoon className="text-blue-500" />}
-        {!collapsed && <span className="text-sm">{dark ? "Light Mode" : "Dark Mode"}</span>}
-      </button>
-    </div>
+      <div className="relative">
+        {dark ? (
+          <FaSun className="text-yellow-500 text-lg group-hover:text-yellow-400 transition-colors" />
+        ) : (
+          <FaMoon className="text-blue-600 text-lg group-hover:text-blue-500 transition-colors" />
+        )}
+      </div>
+    </button>
   );
 }
