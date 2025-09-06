@@ -9,6 +9,7 @@ import { MdOutlineSell } from "react-icons/md";
 import { LuHouse } from "react-icons/lu";
 import UserInfoSummary from "./UserInfoSummary";
 import { useSidebar } from "../hooks/useSidebar";
+import ThemeToggle from "./ThemeToggle";
 
 const Sidebar = () => {
   const { collapsed, toggleCollapsed } = useSidebar();
@@ -28,16 +29,18 @@ const Sidebar = () => {
   useEffect(() => {
     document.documentElement.style.setProperty(
       "--sidebar-width",
-      collapsed ? "4rem px-2" : "16rem"
+      collapsed ? "4rem" : "16rem"
     );
   }, [collapsed]);
 
   return (
     <aside
-      className={` md:flex ${widthClass} md:flex-col md:fixed md:inset-y-0 border-4 border-neutral-200 
-								bg-white/70 supports-[backdrop-filter]:bg-white/60 backdrop-blur rounded-[3rem] 
-								duration-500 delay-100 mt-3 ml-3 mr-3 mb-6 h-full 4rem`}
+      className={`md:flex ${widthClass} md:flex-col md:fixed md:inset-y-0 
+        border-4 border-neutral-200 bg-white/70 dark:bg-neutral-900 
+        supports-[backdrop-filter]:bg-white/60 backdrop-blur rounded-[3rem] 
+        duration-500 delay-100 mt-3 ml-3 mr-3 mb-6 h-full`}
     >
+      {/* Header with logo + hamburger */}
       <div
         className={`w-full rounded-t-[3rem] py-4 ${
           collapsed ? "block self-center" : "flex justify-between"
@@ -51,38 +54,33 @@ const Sidebar = () => {
           <img
             src={stuverse}
             alt="logo"
-            className={`size-10  ${
-              collapsed ? "flex w-full justify-center" : ""
-            }`}
+            className={`size-10 ${collapsed ? "flex w-full justify-center" : ""}`}
           />
-          {collapsed ? null : <p className="text-2xl mt-1.5">StuVerse</p>}
+          {!collapsed && <p className="text-2xl mt-1.5">StuVerse</p>}
         </div>
         <button
           className={`mr-3 ${
             collapsed
               ? "flex w-full justify-center rotate-90 duration-500 delay-100"
               : "duration-500 delay-100"
-          } `}
+          }`}
           onClick={toggleCollapsed}
         >
           <RxHamburgerMenu className="size-6 font-bold self-center" />
         </button>
       </div>
 
+      {/* Navigation */}
       <div className="px-3 mt-2 text-sm">
-        <p
-          className={`${
-            collapsed ? "hidden" : "block"
-          } font-semibold mb-2 text-lg`}
-        >
-          Feature
-        </p>
+        {!collapsed && (
+          <p className="font-semibold mb-2 text-lg">Feature</p>
+        )}
         {navItems.map((item) => (
           <button
             key={item.name}
-            className={`flex items-center gap-2 py-2 rounded-md hover:bg-blue-200 w-full ${
-              collapsed ? "justify-center" : "justify-start"
-            }`}
+            className={`flex items-center gap-2 py-2 rounded-md 
+              hover:bg-blue-200 dark:hover:bg-blue-800 w-full 
+              ${collapsed ? "justify-center" : "justify-start"}`}
           >
             {item.icon}
             {!collapsed && <span>{item.name}</span>}
@@ -91,16 +89,26 @@ const Sidebar = () => {
         <div className="border-2 border-gray-400 rounded-lg my-2" />
 
         <div
-          className={`flex items-center gap-2 py-2 rounded-md hover:bg-blue-200 ${
-            collapsed ? "justify-center" : "justify-start"
-          }`}
+          className={`flex items-center gap-2 py-2 rounded-md 
+            hover:bg-blue-200 dark:hover:bg-blue-800 
+            ${collapsed ? "justify-center" : "justify-start"}`}
         >
           <IoSettingsOutline className="size-6" />
           {!collapsed && <span>Settings</span>}
         </div>
       </div>
 
+
+      {/* Theme toggle above user info */}
+      <div className="mt-auto p-3">
+        <ThemeToggle collapsed={collapsed} />
+      </div>
+
+
+      {/* User info */}
       <UserInfoSummary collapsed={collapsed} />
+
+
     </aside>
   );
 };
