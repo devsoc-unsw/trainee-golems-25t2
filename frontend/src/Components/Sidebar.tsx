@@ -44,7 +44,7 @@ const Sidebar = () => {
         className={`md:flex ${widthClass} md:flex-col md:fixed md:inset-y-0 
           border-4 border-neutral-200 bg-white/70 dark:bg-neutral-900 
           supports-[backdrop-filter]:bg-white/60 backdrop-blur rounded-[3rem] 
-          duration-500 delay-100 mt-3 ml-3 mb-6`}
+          duration-300 mt-3 ml-3 mb-6`}
       >
         {/* Header with logo + hamburger */}
         <div
@@ -69,8 +69,8 @@ const Sidebar = () => {
           <button
             className={`mr-3 ${
               collapsed
-                ? "flex w-full justify-center rotate-90 duration-500 delay-100"
-                : "duration-500 delay-100"
+                ? "flex w-full justify-center rotate-90 duration-300"
+                : "duration-300"
             }`}
             onClick={toggleCollapsed}
           >
@@ -105,7 +105,7 @@ const Sidebar = () => {
         </div>
 
         {/* User info */}
-        <div className="mt-auto">
+        <div className="m-auto mb-3">
           <UserInfoSummary collapsed={collapsed} />
         </div>
       </aside>

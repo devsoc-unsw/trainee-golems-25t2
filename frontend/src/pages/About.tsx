@@ -5,7 +5,7 @@ function About() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-neutral-950 transition-colors duration-300">
       <Sidebar />
-      <div className="w-full sm:px-6 lg:px-8 md:ml-[calc(var(--sidebar-width,16rem))] duration-500 delay-100">
+      <div className="w-full sm:px-6 lg:px-8 md:ml-[calc(var(--sidebar-width,16rem))] duration-300">
         <Navbar />
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
