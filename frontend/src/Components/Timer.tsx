@@ -10,6 +10,7 @@ const Timer: React.FC = () => {
 	const [seconds, setSeconds] = React.useState(0);
 	const [isActive, setIsActive] = React.useState(false);
 	const [sessionType, setSessionType] = React.useState<SessionType>("Focus");
+	const endTimeRef = React.useRef<number | null>(null);
 
 	const requestNotificationPermission = async () => {
 		await Notification.requestPermission();
@@ -27,9 +28,24 @@ const Timer: React.FC = () => {
 
 	useEffect(() => {
 		let interval: NodeJS.Timeout;
+
 		if (isActive) {
+			if (!endTimeRef.current) {
+				endTimeRef.current = Date.now() + (minutes * 60 + seconds) * 1000;
+			}
+
 			interval = setInterval(() => {
-				if (minutes === 0 && seconds === 0) {
+				const remaining = Math.max(0, endTimeRef.current! - Date.now());
+				const newMinutes = Math.floor(remaining / 1000 / 60);
+				const newSeconds = Math.floor((remaining / 1000) % 60);
+
+				setMinutes(newMinutes);
+				setSeconds(newSeconds);
+
+				if (remaining === 0) {
+					clearInterval(interval);
+					endTimeRef.current = null;
+
 					if (sessionType === "Focus") {
 						showNotification("Pomodoro Timer", "Focus session done! Time for a break.");
 						setSessionType("Break");
@@ -41,36 +57,52 @@ const Timer: React.FC = () => {
 						setMinutes(25);
 						setSeconds(0);
 					}
-				} else if (seconds === 0) {
-					setMinutes((prev) => prev - 1);
-					setSeconds(59);
-				} else {
-					setSeconds((prev) => prev - 1);
 				}
-			}, 1000);
+			}, 200);
 		}
+
 		return () => clearInterval(interval);
-	}, [minutes, seconds, isActive, sessionType]);
+	}, [isActive, sessionType]);
 
 	const toggle = () => {
+		if (isActive) {
+			endTimeRef.current = null;
+		}
 		setIsActive(!isActive);
 	};
 
 	const reset = () => {
 		setSessionType("Focus");
 		setIsActive(false);
-		setDuration(25);
+		setMinutes(25);
+		setSeconds(0);
+		endTimeRef.current = null;
 	};
 
 	const setDuration = (duration: number) => {
 		setSessionType("Focus");
-		setIsActive(false);
 		setMinutes(duration);
 		setSeconds(0);
-	}
+		if (isActive) {
+			endTimeRef.current = Date.now() + duration * 60 * 1000;
+		} else {
+			endTimeRef.current = null;
+		}
+	};
 
 	const changeDuration = (delta: number) => {
-		setMinutes((prev) => prev + delta >= 1 ? prev + delta : 1);
+		const totalSeconds = minutes * 60 + seconds + delta * 60;
+		const newMinutes = Math.floor(Math.max(totalSeconds, 1) / 60);
+		const newSeconds = Math.max(totalSeconds, 1) % 60;
+
+		if (totalSeconds <= 0) return;
+
+		setMinutes(newMinutes);
+		setSeconds(newSeconds);
+
+		if (isActive && endTimeRef.current) {
+			endTimeRef.current += delta * 60 * 1000;
+		}
 	};
 
 	return (
