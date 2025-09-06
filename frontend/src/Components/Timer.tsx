@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { IoPause, IoPlay } from "react-icons/io5";
+import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
 
 type SessionType = "Focus" | "Break";
-const durations = [1, 15, 20, 25, 30, 45, 60];
+const durations = [15, 20, 25, 30, 45, 60];
 
 const Timer: React.FC = () => {
     const [minutes, setMinutes] = React.useState(25);
@@ -32,13 +33,11 @@ const Timer: React.FC = () => {
                     if (sessionType === "Focus") {
                         showNotification("Pomodoro Timer", "Focus session done! Time for a break.");
                         setSessionType("Break");
-                        setMinutes(5);
-                        setSeconds(0);
+                        setDuration(5);
                     } else {
                         showNotification("Pomodoro Timer", "Break session done! Time to focus.");
                         setSessionType("Focus");
-                        setMinutes(25);
-                        setSeconds(0);
+                        setDuration(25);
                     }
                 } else if (seconds === 0) {
                     setMinutes((prev) => prev - 1);
@@ -58,8 +57,7 @@ const Timer: React.FC = () => {
     const reset = () => {
         setSessionType("Focus");
         setIsActive(false);
-        setMinutes(25);
-        setSeconds(0);
+        setDuration(25);
     };
 
     const setDuration = (duration: number) => {
@@ -68,6 +66,10 @@ const Timer: React.FC = () => {
         setMinutes(duration);
         setSeconds(0);
     }
+
+    const changeDuration = (delta: number) => {
+        setMinutes((prev) => prev + delta >= 1 ? prev + delta : 1);
+    };
 
     return (
         <div className={`flex flex-col items-center gap-4 p-4 
@@ -103,8 +105,13 @@ const Timer: React.FC = () => {
                 </button>
             </div>
 
+            <div className="flex gap flex-wrap justify-center">
+                <CiCircleMinus className="font-bold self-center" size={45} onClick={() => changeDuration(-1)} />
+                <CiCirclePlus className="font-bold self-center" size={45} onClick={() => changeDuration(1)} />
+            </div>
+
             {/* Duration Buttons */}
-            <div className="flex gap-2 mt-4 flex-wrap justify-center">
+            <div className="flex gap-2 flex-wrap justify-center">
                 {durations.map((d) => (
                     <button
                         key={d}
