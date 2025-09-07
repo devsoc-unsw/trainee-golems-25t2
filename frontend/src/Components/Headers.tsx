@@ -10,9 +10,8 @@ export const Headers: React.FC<HeadersProps> = ({ className = "" }) => {
       <div className="relative inline-block">
         <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight">
           <span className="bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">
-            Your Student
+            Your Student&nbsp;
           </span>
-          <br />
           <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent animate-pulse">
             Assistance Tool
           </span>

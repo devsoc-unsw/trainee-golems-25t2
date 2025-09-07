@@ -40,12 +40,7 @@ function Landing() {
     <div className="min-h-screen bg-gray-50 relative">
       {/* Background Ballpit */}
       <div
-        style={{
-          width: "100%",
-          height: "100%",
-          position: "fixed",
-          zIndex: "1",
-        }}
+        className="w-full h-full fixed z-0"
       >
         <Ballpit
           count={100}
@@ -69,21 +64,26 @@ function Landing() {
         />
       </div>
 
+      {/* Navbar */}
       <Navbar brandName="StuVerse" className="relative z-50" />
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="text-center space-y-6">
-          <Headers className="mx-auto" />
-          <GetStartedButton className="mx-auto" />
-          {icons.map(({ src, posx, posy, rotate }, index) => (
-            <FloatingIcon
-              key={index}
-              image={src}
-              posx={posx}
-              posy={posy}
-              rotate={rotate}
-            />
-          ))}
-        </div>
+
+      {/* Centered Button */}
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <GetStartedButton />
+      </div>
+
+      {/* Headers + Floating Icons */}
+      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6">
+        <Headers className="mx-auto" />
+        {icons.map(({ src, posx, posy, rotate }, index) => (
+          <FloatingIcon
+            key={index}
+            image={src}
+            posx={posx}
+            posy={posy}
+            rotate={rotate}
+          />
+        ))}
       </div>
     </div>
   );
