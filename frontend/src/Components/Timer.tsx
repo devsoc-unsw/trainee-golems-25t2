@@ -160,8 +160,8 @@ const Timer: React.FC = () => {
 			</div>
 
 			<div className="flex gap flex-wrap justify-center">
-				<CiCircleMinus className="font-bold self-center" size={45} onClick={() => changeDuration(-1)} />
-				<CiCirclePlus className="font-bold self-center" size={45} onClick={() => changeDuration(1)} />
+				<CiCircleMinus className="font-bold self-center cursor-pointer" size={45} onClick={() => changeDuration(-1)} />
+				<CiCirclePlus className="font-bold self-center cursor-pointer" size={45} onClick={() => changeDuration(1)} />
 			</div>
 
 			{/* Duration Buttons */}
@@ -178,7 +178,6 @@ const Timer: React.FC = () => {
 			</div>
 		</div>
 	);
-
 }
 
 export default Timer;
