@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { IoPause, IoPlay } from "react-icons/io5";
 import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
+import focusSoundFile from "../assets/audio/focus-done.mp3";
+import breakSoundFile from "../assets/audio/break-done.mp3";
 
 type SessionType = "Focus" | "Break";
 const durations = [15, 20, 25, 30, 45, 60];
@@ -11,6 +13,19 @@ const Timer: React.FC = () => {
 	const [isActive, setIsActive] = React.useState(false);
 	const [sessionType, setSessionType] = React.useState<SessionType>("Focus");
 	const endTimeRef = React.useRef<number | null>(null);
+	const focusSoundRef = React.useRef<HTMLAudioElement | null>(null);
+	const breakSoundRef = React.useRef<HTMLAudioElement | null>(null);
+
+	// Preload sounds
+	useEffect(() => {
+		const focusAudio = new Audio(focusSoundFile);
+		focusAudio.preload = "auto";
+		focusSoundRef.current = focusAudio;
+
+		const breakAudio = new Audio(breakSoundFile);
+		breakAudio.preload = "auto";
+		breakSoundRef.current = breakAudio;
+	}, []);
 
 	const requestNotificationPermission = async () => {
 		if (!("Notification" in window)) {
@@ -30,17 +45,23 @@ const Timer: React.FC = () => {
 		}
 	};
 
-	const showNotification = (title: string, body: string) => {
-		if (!("Notification" in window)) return;
+	const showNotification = React.useCallback((title: string, body: string, endedSessionType: SessionType) => {
+	       const audio = endedSessionType === "Focus" ? focusSoundRef.current : breakSoundRef.current;
+	       if (audio) {
+		       audio.currentTime = 0;
+		       audio.play().catch((err) => console.warn("Unable to play sound:", err));
+	       }
 
-		if (Notification.permission === "granted") {
-			try {
-				new Notification(title, { body });
-			} catch (error) {
-				console.error("Failed to show notification:", error);
-			}
-		}
-	};
+	       if (!("Notification" in window)) return;
+
+	       if (Notification.permission === "granted") {
+		       try {
+			       new Notification(title, { body });
+		       } catch (error) {
+			       console.error("Failed to show notification:", error);
+		       }
+	       }
+	}, []);
 
 	useEffect(() => {
 		requestNotificationPermission();
@@ -62,27 +83,27 @@ const Timer: React.FC = () => {
 				setMinutes(newMinutes);
 				setSeconds(newSeconds);
 
-				if (remaining === 0) {
-					clearInterval(interval);
-					endTimeRef.current = null;
+		       if (remaining === 0) {
+			       clearInterval(interval);
+			       endTimeRef.current = null;
 
-					if (sessionType === "Focus") {
-						showNotification("Pomodoro Timer", "Focus session done! Time for a break.");
-						setSessionType("Break");
-						setMinutes(5);
-						setSeconds(0);
-					} else {
-						showNotification("Pomodoro Timer", "Break session done! Time to focus.");
-						setSessionType("Focus");
-						setMinutes(25);
-						setSeconds(0);
-					}
-				}
+			       if (sessionType === "Focus") {
+				       showNotification("Pomodoro Timer", "Focus session done! Time for a break.", "Focus");
+				       setSessionType("Break");
+				       setMinutes(5);
+				       setSeconds(0);
+			       } else {
+				       showNotification("Pomodoro Timer", "Break session done! Time to focus.", "Break");
+				       setSessionType("Focus");
+				       setMinutes(25);
+				       setSeconds(0);
+			       }
+		       }
 			}, 200);
 		}
 
 		return () => clearInterval(interval);
-	}, [minutes, seconds, isActive, sessionType]);
+	}, [minutes, seconds, isActive, sessionType, showNotification]);
 
 	const toggle = () => {
 		if (isActive) {
@@ -152,7 +173,7 @@ const Timer: React.FC = () => {
 
 				{/* Reset Button */}
 				<button
-					className="mt-2 px-4 py-2 rounded-full bg-white text-black shadow hover:bg-gray-200 transition"
+					className="mt-3 px-4 py-2 rounded-full bg-white text-black shadow hover:bg-gray-200 transition"
 					onClick={reset}
 				>
 					Reset
