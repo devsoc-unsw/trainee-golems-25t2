@@ -12,9 +12,10 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ collapsed }) => {
   const handleLogout = async () => {
     try {
       await logoutUser();
-      navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
+    } finally {
+      navigate("/", { replace: true });
     }
   };
   return (
