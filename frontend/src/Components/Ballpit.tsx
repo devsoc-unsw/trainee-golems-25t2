@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from "react";
 import {
   Clock,
   PerspectiveCamera,
+  OrthographicCamera,
   Scene,
   WebGLRenderer,
   WebGLRendererParameters,
@@ -14,6 +15,9 @@ import {
   Color,
   Object3D,
   InstancedMesh,
+  Mesh,
+  Material,
+  BufferGeometry,
   PMREMGenerator,
   SphereGeometry,
   AmbientLight,
@@ -44,9 +48,19 @@ interface SizeData {
   pixelRatio: number;
 }
 
+type PostprocessingController = {
+  setSize: (width: number, height: number) => void;
+  render: () => void;
+  dispose: () => void;
+};
+
+function isOrthographicCamera(cam: unknown): cam is OrthographicCamera {
+  return Boolean((cam as OrthographicCamera)?.isOrthographicCamera);
+}
+
 class X {
   #config: XConfig;
-  #postprocessing: any;
+  #postprocessing?: PostprocessingController;
   #resizeObserver?: ResizeObserver;
   #intersectionObserver?: IntersectionObserver;
   #resizeTimer?: number;
@@ -200,8 +214,8 @@ class X {
       this.size.wHeight =
         2 * Math.tan(fovRad / 2) * this.camera.position.length();
       this.size.wWidth = this.size.wHeight * this.camera.aspect;
-    } else if ((this.camera as any).isOrthographicCamera) {
-      const cam = this.camera as any;
+    } else if (isOrthographicCamera(this.camera)) {
+      const cam = this.camera;
       this.size.wHeight = cam.top - cam.bottom;
       this.size.wWidth = cam.right - cam.left;
     }
@@ -223,19 +237,31 @@ class X {
   get postprocessing() {
     return this.#postprocessing;
   }
-  set postprocessing(value: any) {
+  set postprocessing(value: PostprocessingController | undefined) {
     this.#postprocessing = value;
-    this.render = value.render.bind(value);
+    if (value) {
+      this.render = value.render.bind(value);
+    } else {
+      this.render = this.#render.bind(this);
+    }
   }
 
   #onIntersection(entries: IntersectionObserverEntry[]) {
     this.#isAnimating = entries[0].isIntersecting;
-    this.#isAnimating ? this.#startAnimation() : this.#stopAnimation();
+    if (this.#isAnimating) {
+      this.#startAnimation();
+    } else {
+      this.#stopAnimation();
+    }
   }
 
   #onVisibilityChange() {
     if (this.#isAnimating) {
-      document.hidden ? this.#stopAnimation() : this.#startAnimation();
+      if (document.hidden) {
+        this.#stopAnimation();
+      } else {
+        this.#startAnimation();
+      }
     }
   }
 
@@ -267,24 +293,34 @@ class X {
   }
 
   clear() {
-    this.scene.traverse((obj) => {
-      if (
-        (obj as any).isMesh &&
-        typeof (obj as any).material === "object" &&
-        (obj as any).material !== null
-      ) {
-        Object.keys((obj as any).material).forEach((key) => {
-          const matProp = (obj as any).material[key];
+    const disposeMaterial = (mat: Material | Material[]) => {
+      if (Array.isArray(mat)) {
+        mat.forEach((m) => m.dispose?.());
+      } else {
+        const maybeRecord = mat as unknown as Record<string, unknown>;
+        Object.keys(maybeRecord).forEach((key) => {
+          const val = maybeRecord[key] as unknown;
           if (
-            matProp &&
-            typeof matProp === "object" &&
-            typeof matProp.dispose === "function"
+            val &&
+            typeof val === "object" &&
+            typeof (val as { dispose?: () => void }).dispose === "function"
           ) {
-            matProp.dispose();
+            (val as { dispose: () => void }).dispose();
           }
         });
-        (obj as any).material.dispose();
-        (obj as any).geometry.dispose();
+        mat.dispose?.();
+      }
+    };
+
+    this.scene.traverse((obj) => {
+      const mesh = obj as Mesh<BufferGeometry, Material | Material[]>;
+      if (
+        (mesh as unknown as { isMesh?: boolean }).isMesh &&
+        mesh.material &&
+        mesh.geometry
+      ) {
+        disposeMaterial(mesh.material);
+        (mesh.geometry as unknown as { dispose?: () => void }).dispose?.();
       }
     });
     this.scene.clear();
@@ -452,7 +488,7 @@ class W {
 }
 
 class Y extends MeshPhysicalMaterial {
-  uniforms: { [key: string]: { value: any } } = {
+  uniforms: { [key: string]: { value: number } } = {
     thicknessDistortion: { value: 0.1 },
     thicknessAmbient: { value: 0 },
     thicknessAttenuation: { value: 0.1 },
@@ -461,7 +497,7 @@ class Y extends MeshPhysicalMaterial {
   };
   defines: { [key: string]: string } = { USE_UV: "" };
 
-  constructor(params: any) {
+  constructor(params: ConstructorParameters<typeof MeshPhysicalMaterial>[0]) {
     super(params);
     this.defines = { USE_UV: "" };
     this.onBeforeCompile = (shader) => {
@@ -505,7 +541,9 @@ class Y extends MeshPhysicalMaterial {
       if (this.onBeforeCompile2) this.onBeforeCompile2(shader);
     };
   }
-  onBeforeCompile2?: (shader: any) => void;
+  onBeforeCompile2?: (
+    shader: Parameters<MeshPhysicalMaterial["onBeforeCompile"]>[0]
+  ) => void;
 }
 
 const XConfig = {
@@ -861,7 +899,7 @@ interface CreateBallpitReturn {
 
 function createBallpit(
   canvas: HTMLCanvasElement,
-  config: any = {}
+  config: Partial<typeof XConfig> = {}
 ): CreateBallpitReturn {
   const threeInstance = new X({
     canvas,
@@ -882,7 +920,11 @@ function createBallpit(
 
   canvas.style.touchAction = "none";
   canvas.style.userSelect = "none";
-  (canvas.style as any).webkitUserSelect = "none";
+  (
+    canvas.style as unknown as CSSStyleDeclaration & {
+      webkitUserSelect?: string;
+    }
+  ).webkitUserSelect = "none";
 
   const pointerData = createPointerData({
     domElement: canvas,
@@ -897,7 +939,7 @@ function createBallpit(
       spheres.config.controlSphere0 = false;
     },
   });
-  function initialize(cfg: any) {
+  function initialize(cfg: Partial<typeof XConfig>) {
     if (spheres) {
       threeInstance.clear();
       threeInstance.scene.remove(spheres);
@@ -933,7 +975,7 @@ function createBallpit(
 interface BallpitProps {
   className?: string;
   followCursor?: boolean;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 const Ballpit: React.FC<BallpitProps> = ({
