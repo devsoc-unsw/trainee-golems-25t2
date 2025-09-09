@@ -36,9 +36,9 @@ const UserInfoSummary: React.FC<UserInfoSummaryProps> = ({ collapsed }) => {
         </div>
       ) : (
         // Full profile container when expanded
-        <button className="flex items-center justify-between w-6/7 border-2 border-gray-400 rounded-[3rem] h-14 p-2 transition-all duration-300">
+        <button className="mt-auto flex items-center justify-between w-full mb-3 border-2 border-gray-400 rounded-[3rem] h-14 p-2">
           <CgProfile className="size-10 font-bold self-center" />
-          <div className="px-4">
+          <div className="w-full px-4">
             {loading ? (
               <p className="text-xs">Loading...</p>
             ) : error ? (
