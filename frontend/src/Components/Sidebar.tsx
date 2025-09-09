@@ -10,10 +10,13 @@ import { LuHouse } from "react-icons/lu";
 import UserInfoSummary from "./UserInfoSummary";
 import { useSidebar } from "../hooks/useSidebar";
 import ThemeToggle from "./ThemeToggle";
+import { useNavigate } from "react-router-dom";
+import LogoutButton from "./LogOutButton";
 
 const Sidebar = () => {
   const { collapsed, toggleCollapsed } = useSidebar();
   const widthClass = collapsed ? "md:w-16" : "md:w-64";
+  const navigate = useNavigate();
 
   const navItems = [
     { name: "Dashboard", icon: <MdOutlineDashboard className="size-6" /> },
@@ -94,6 +97,7 @@ const Sidebar = () => {
           ))}
           <div className="border-2 border-gray-400 rounded-lg my-2" />
 
+
           <div
             className={`flex items-center gap-2 py-2 rounded-md 
             hover:bg-blue-200 dark:hover:bg-blue-800 
@@ -108,6 +112,7 @@ const Sidebar = () => {
         <div className="m-auto mb-3">
           <UserInfoSummary collapsed={collapsed} />
         </div>
+        <LogoutButton collapsed={collapsed} />
       </aside>
     </>
   );

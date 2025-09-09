@@ -33,6 +33,7 @@ const UserInfoSummary: React.FC<UserInfoSummaryProps> = ({ collapsed }) => {
         // Just the profile icon when collapsed
         <div className="flex justify-center">
           <CgProfile className="size-10 font-bold" />
+
         </div>
       ) : (
         // Full profile container when expanded
