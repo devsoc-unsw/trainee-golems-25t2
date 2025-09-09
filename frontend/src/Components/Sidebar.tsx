@@ -10,7 +10,8 @@ import { LuHouse } from "react-icons/lu";
 import UserInfoSummary from "./UserInfoSummary";
 import { useSidebar } from "../hooks/useSidebar";
 import ThemeToggle from "./ThemeToggle";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom
+import LogoutButton from "./LogOutButton";
 
 const Sidebar = () => {
   const { collapsed, toggleCollapsed } = useSidebar();
@@ -117,7 +118,8 @@ const Sidebar = () => {
       {/* User info */}
       <UserInfoSummary collapsed={collapsed} />
 
-
+      {/* Logout button */}
+      <LogoutButton collapsed={collapsed} />
     </aside>
   );
 };
