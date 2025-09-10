@@ -12,3 +12,13 @@ export async function getTasks(userId: string) {
         orderBy: { createdAt: "desc" },
     });
 }
+
+export async function createTask(userId: string, title: string, description?: string) {
+    return await prisma.task.create({
+        data: {
+            userId,
+            title,
+            description,
+        },
+    });
+}
