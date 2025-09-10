@@ -23,6 +23,11 @@ const ErrorMap = {
   // Login errors
   PASSWORD_INCORRECT: "Your password is incorrect.",
   EMAIL_DOES_NOT_EXIST: "Email does not exist.",
+
+  // Todo errors
+  MISSING_FIELDS: "Missing required fields.",
+  TASK_NAME_TOO_LONG: "Task name must be less than 100 characters.",
+  TASK_DESCRIPTION_TOO_LONG: "Task description must be less than 500 characters.",
 };
 
 // Maps error messages from the enum ErrorMap to HTTP status codes
@@ -43,6 +48,10 @@ const StatusCodeMap = {
 
   [ErrorMap["PASSWORD_INCORRECT"]]: 400,
   [ErrorMap["EMAIL_DOES_NOT_EXIST"]]: 400,
+
+  [ErrorMap["MISSING_FIELDS"]]: 400,
+  [ErrorMap["TASK_NAME_TOO_LONG"]]: 400,
+  [ErrorMap["TASK_DESCRIPTION_TOO_LONG"]]: 400,
 };
 
 export { ErrorMap, StatusCodeMap };
