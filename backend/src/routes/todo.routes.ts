@@ -13,4 +13,7 @@ router.post("/", sessionMiddleware, todoController.createTask);
 // PUT /api/todos/:id - update a task
 router.put("/:id", sessionMiddleware, todoController.updateTask);
 
+// DELETE /api/todos/:id - delete a task
+router.delete("/:id", sessionMiddleware, todoController.deleteTask);
+
 export default router;
