@@ -10,4 +10,7 @@ router.get("/", sessionMiddleware, todoController.getTasks);
 // POST /api/todos - create a new task
 router.post("/", sessionMiddleware, todoController.createTask);
 
+// PUT /api/todos/:id - update a task
+router.put("/:id", sessionMiddleware, todoController.updateTask);
+
 export default router;

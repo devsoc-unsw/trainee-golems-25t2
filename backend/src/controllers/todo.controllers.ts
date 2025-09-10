@@ -44,3 +44,27 @@ export async function createTask(req: Request, res: Response) {
         res.status(statusCode).json({ error: message });
     }
 };
+
+export async function updateTask(req: Request, res: Response) {
+    try {
+        const session = req.cookies.sessionId;
+        const userId = await getUserBySession(session);
+        if (!userId) {
+            return res.status(400).json({ error: ErrorMap.USER_DOES_NOT_EXIST });
+        }
+        const { id } = req.params;
+        const { title, description, isCompleted } = req.body;
+        if (title && title.length > 100) {
+            return res.status(400).json({ error: ErrorMap.TASK_NAME_TOO_LONG });
+        }
+        if (description && description.length > 500) {
+            return res.status(400).json({ error: ErrorMap.TASK_DESCRIPTION_TOO_LONG });
+        }
+        const updatedTask = await todoService.updateTask(id, title, description, isCompleted);
+        res.json(updatedTask);
+    } catch (err: any) {
+        const message = err instanceof Error ? err.message : "An error occurred";
+        const statusCode = StatusCodeMap[message] || 500;
+        res.status(statusCode).json({ error: message });
+    }
+}

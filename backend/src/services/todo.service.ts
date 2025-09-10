@@ -22,3 +22,14 @@ export async function createTask(userId: string, title: string, description?: st
         },
     });
 }
+
+export async function updateTask(taskId: string, title?: string, description?: string, isCompleted?: boolean) {
+    return await prisma.task.update({
+        where: { id: taskId },
+        data: {
+            title,
+            description,
+            isCompleted,
+        },
+    });
+}
