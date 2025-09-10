@@ -12,7 +12,7 @@ export async function getTasks(req: Request, res: Response) {
         }
         const tasks = await todoService.getTasks(userId.id);
         res.json(tasks);
-    } catch (err: any) {
+    } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "An error occurred";
         const statusCode = StatusCodeMap[message] || 500;
         res.status(statusCode).json({ error: message });
@@ -38,7 +38,7 @@ export async function createTask(req: Request, res: Response) {
         }
         const newTask = await todoService.createTask(userId.id, title, description);
         res.json(newTask);
-    } catch (err: any) {
+    } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "An error occurred";
         const statusCode = StatusCodeMap[message] || 500;
         res.status(statusCode).json({ error: message });
@@ -62,7 +62,7 @@ export async function updateTask(req: Request, res: Response) {
         }
         const updatedTask = await todoService.updateTask(id, title, description, isCompleted);
         res.json(updatedTask);
-    } catch (err: any) {
+    } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "An error occurred";
         const statusCode = StatusCodeMap[message] || 500;
         res.status(statusCode).json({ error: message });
@@ -79,7 +79,7 @@ export async function deleteTask(req: Request, res: Response) {
         const { id } = req.params;
         await todoService.deleteTask(id);
         res.json({ message: "Task deleted successfully" });
-    } catch (err: any) {
+    } catch (err: unknown) {
         const message = err instanceof Error ? err.message : "An error occurred";
         const statusCode = StatusCodeMap[message] || 500;
         res.status(statusCode).json({ error: message });
