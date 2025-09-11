@@ -10,16 +10,28 @@ import marketplace from "../assets/icons/marketplace.png";
 import accomodation from "../assets/icons/accomodation.png";
 import aiLectureSlide from "../assets/icons/ai-lecture-slides.png";
 import Ballpit from "../Components/Ballpit";
+import { useLoading } from "../contexts/LoadingContext";
+import LoadingScreen from "../Components/LoadingScreen";
 
 function Landing() {
   const { isSignedIn, isLoaded } = useUser();
   const navigate = useNavigate();
+  const { isLoading, setLoading } = useLoading();
 
   useEffect(() => {
-    if (isLoaded && isSignedIn) {
+    if (!isLoaded) {
+      setLoading(true, "Loading application...");
+    } else if (isSignedIn) {
+      setLoading(true, "Redirecting to dashboard...");
       navigate("/dashboard", { replace: true });
+    } else {
+      setLoading(false);
     }
-  }, [isLoaded, isSignedIn, navigate]);
+  }, [isLoaded, isSignedIn, navigate, setLoading]);
+
+  if (isLoading) {
+    return <LoadingScreen message="Loading application..." />;
+  }
 
   const icons = [
     {

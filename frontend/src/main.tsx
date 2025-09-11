@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
 import { Router } from "./Router";
 import { SidebarProvider } from "./contexts/SidebarContext";
+import { LoadingProvider } from "./contexts/LoadingContext";
 import "./index.css";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -19,6 +20,18 @@ const clerkAppearance = {
   },
 };
 
+const AppWithLoading = () => {
+  return (
+    <LoadingProvider>
+      <BrowserRouter>
+        <SidebarProvider>
+          <Router />
+        </SidebarProvider>
+      </BrowserRouter>
+    </LoadingProvider>
+  );
+};
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ClerkProvider
@@ -26,11 +39,7 @@ createRoot(document.getElementById("root")!).render(
       afterSignOutUrl="/"
       appearance={clerkAppearance}
     >
-      <BrowserRouter>
-        <SidebarProvider>
-          <Router />
-        </SidebarProvider>
-      </BrowserRouter>
+      <AppWithLoading />
     </ClerkProvider>
   </StrictMode>
 );

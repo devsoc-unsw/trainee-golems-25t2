@@ -41,7 +41,10 @@ const UserInfoSummary: React.FC<UserInfoSummaryProps> = ({ collapsed }) => {
             ) : user ? (
               <>
                 <p className={`font-semibold text-sm`}>
-                  {user.fullName || user.firstName || "No Name"}
+                  {user.fullName ||
+                    user.firstName ||
+                    user.username ||
+                    "No Name"}
                 </p>
                 <p className={`text-xs`}>
                   {user.primaryEmailAddress?.emailAddress || "No Email"}
