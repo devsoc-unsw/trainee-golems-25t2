@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 
-interface ThemeToggleProps {
-  collapsed?: boolean;
-}
-
 const THEME_KEY = "theme";
 const DARK_CLASS = "dark";
 
-export default function ThemeToggle({ collapsed = false }: ThemeToggleProps) {
+export default function ThemeToggle() {
   const [dark, setDark] = useState(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem(THEME_KEY);
@@ -29,23 +25,31 @@ export default function ThemeToggle({ collapsed = false }: ThemeToggleProps) {
   }, [dark]);
 
   return (
-    <div
-      className={`flex items-center justify-center w-full ${
-        collapsed ? "flex-col" : "flex-row"
-      }`}
+    <button
+      onClick={() => setDark((d) => !d)}
+      className="relative w-14 h-7 rounded-full 
+                 bg-gray-200 dark:bg-gray-700
+                 border border-gray-300 dark:border-gray-600
+                 hover:bg-gray-300 dark:hover:bg-gray-600
+                 transition-colors duration-200 ease-in-out
+                 focus:outline-none"
+      aria-label="Toggle dark mode"
     >
-      <button
-        onClick={() => setDark((d) => !d)}
-        className="flex items-center gap-2 px-3 py-2 rounded-lg 
-                   bg-gray-200 dark:bg-gray-700 
-                   text-gray-800 dark:text-gray-100 
-                   hover:bg-gray-300 dark:hover:bg-gray-600 
-                   transition"
-        aria-label="Toggle dark mode"
+      {/* Switch Thumb */}
+      <div
+        className={`absolute top-0.5 w-6 h-6 rounded-full 
+                   bg-white dark:bg-gray-800
+                   shadow-sm border border-gray-200 dark:border-gray-600
+                   transition-transform duration-200 ease-in-out
+                   flex items-center justify-center
+                   ${dark ? "translate-x-6" : "translate-x-0.5"}`}
       >
-        {dark ? <FaSun className="text-yellow-400" /> : <FaMoon className="text-blue-500" />}
-        {!collapsed && <span className="text-sm">{dark ? "Light Mode" : "Dark Mode"}</span>}
-      </button>
-    </div>
+        {dark ? (
+          <FaMoon className="text-gray-600 text-xs" />
+        ) : (
+          <FaSun className="text-gray-600 text-xs" />
+        )}
+      </div>
+    </button>
   );
 }

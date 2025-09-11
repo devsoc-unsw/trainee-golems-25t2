@@ -19,7 +19,10 @@ const LogoutButton: React.FC<LogoutButtonProps> = ({ collapsed }) => {
     }
   };
   return (
-    <button className="flex items-center w-full mb-5 border-2 border-[#8B5CF6] rounded-[3rem] h-14 p-2" onClick={handleLogout}>
+    <button
+      className="flex items-center w-full mb-2 border-2 border-gray-400 rounded-[3rem] h-14 p-2"
+      onClick={handleLogout}
+    >
       <IoIosLogOut className="size-10 font-bold self-center" />
       {!collapsed && <p className="font-semibold text-sm m-2">Log Out</p>}
     </button>
