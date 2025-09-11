@@ -9,6 +9,32 @@ vi.mock("../Components/Ballpit", () => ({
   default: () => <div data-testid="ballpit" />,
 }));
 
+// Mock Clerk hooks
+vi.mock("@clerk/clerk-react", () => ({
+  useUser: () => ({
+    isSignedIn: false,
+    isLoaded: true,
+  }),
+  ClerkProvider: ({ children }: { children: React.ReactNode }) => children,
+  SignedIn: () => null,
+  SignedOut: ({ children }: { children: React.ReactNode }) => children,
+  SignInButton: ({ children }: { children: React.ReactNode }) => (
+    <button>{children}</button>
+  ),
+  SignUpButton: ({ children }: { children: React.ReactNode }) => (
+    <button>{children}</button>
+  ),
+  UserButton: () => <div>UserButton</div>,
+}));
+
+// Mock useLoading hook
+vi.mock("../hooks/useLoading", () => ({
+  useLoading: () => ({
+    isLoading: false,
+    setLoading: vi.fn(),
+  }),
+}));
+
 const renderLanding = () => {
   return render(
     <BrowserRouter>
