@@ -40,22 +40,24 @@ export async function getStudyStats(userId: string) {
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    let streak = 0;
-    let expectedDay = today.getTime();
-    streak = sessionDays.reduce((count, sessionDay) => {
-        if (sessionDay === expectedDay) {
-            count++;
-            // move expectedDay to previous day
-            expectedDay -= 24 * 60 * 60 * 1000;
-        }
-        return count;
-    }, 0);
 
+    let currentStreak = 0;
+    let expected = new Date();
+    expected.setHours(0, 0, 0, 0);
+
+    for (const day of sessionDays) {
+        if (day === expected.getTime()) {
+            currentStreak++;
+            expected.setDate(expected.getDate() - 1);
+        } else {
+            break;
+        }
+    }
 
     return {
         totalSessions,
         totalStudyTime, // in hours
         longestSession, // in hours
-        streak, // in days
+        currentStreak, // in days
     };
 }
