@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "@clerk/clerk-react";
 import FloatingIcon from "../Components/FloatingIcon";
 import { Navbar } from "../Components/Navbar";
 import Headers from "../Components/Headers";
@@ -9,6 +12,15 @@ import aiLectureSlide from "../assets/icons/ai-lecture-slides.png";
 import Ballpit from "../Components/Ballpit";
 
 function Landing() {
+  const { isSignedIn, isLoaded } = useUser();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [isLoaded, isSignedIn, navigate]);
+
   const icons = [
     {
       src: productivity,
@@ -39,9 +51,7 @@ function Landing() {
   return (
     <div className="min-h-screen bg-gray-50 relative">
       {/* Background Ballpit */}
-      <div
-        className="w-full h-full fixed z-0"
-      >
+      <div className="w-full h-full fixed z-0">
         <Ballpit
           count={100}
           gravity={0.05}

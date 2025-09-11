@@ -10,13 +10,9 @@ import { LuHouse } from "react-icons/lu";
 import UserInfoSummary from "./UserInfoSummary";
 import { useSidebar } from "../hooks/useSidebar";
 import ThemeToggle from "./ThemeToggle";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-} from "@clerk/clerk-react";
+import { SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
+import LogoutButton from "./LogOutButton";
 
 const Sidebar = () => {
   const { collapsed, toggleCollapsed } = useSidebar();
@@ -123,9 +119,7 @@ const Sidebar = () => {
         <div className="m-auto mb-1">
           <SignedIn>
             <UserInfoSummary collapsed={collapsed} />
-            <div className="flex justify-center mt-2">
-              <UserButton afterSignOutUrl="/" />
-            </div>
+            <LogoutButton collapsed={collapsed} />
           </SignedIn>
           <SignedOut>
             <div className="flex justify-center">

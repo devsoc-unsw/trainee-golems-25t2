@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useClerk } from "@clerk/clerk-react";
 import { IoIosLogOut } from "react-icons/io";
-import { logoutUser } from "../Fetchers/LoginFetch";
 
 interface LogoutButtonProps {
   collapsed: boolean;
@@ -9,13 +9,14 @@ interface LogoutButtonProps {
 
 const LogoutButton: React.FC<LogoutButtonProps> = ({ collapsed }) => {
   const navigate = useNavigate();
+  const { signOut } = useClerk();
+
   const handleLogout = async () => {
     try {
-      await logoutUser();
+      await signOut();
+      navigate("/", { replace: true });
     } catch (error) {
       console.error("Logout failed:", error);
-    } finally {
-      navigate("/", { replace: true });
     }
   };
   return (

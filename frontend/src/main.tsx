@@ -11,9 +11,21 @@ if (!PUBLISHABLE_KEY) {
   throw new Error("Missing Clerk Publishable Key");
 }
 
+const clerkAppearance = {
+  elements: {
+    footer: "hidden",
+    footerText: "hidden",
+    footerTextLink: "hidden",
+  },
+};
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+      afterSignOutUrl="/"
+      appearance={clerkAppearance}
+    >
       <BrowserRouter>
         <SidebarProvider>
           <Router />

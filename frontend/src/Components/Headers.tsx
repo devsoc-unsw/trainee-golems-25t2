@@ -16,7 +16,7 @@ export const Headers: React.FC<HeadersProps> = ({ className = "" }) => {
             Assistance Tool
           </span>
         </h1>
-        </div>
+      </div>
 
       <div className="relative">
         <p className="text-2xl sm:text-3xl lg:text-4xl font-semibold text-gray-600 tracking-wide">
