@@ -17,13 +17,15 @@ describe("Navbar", () => {
     expect(brandElement).toBeDefined();
   });
 
-  test("renders navigation links", () => {
+  test("renders navigation links (Home, Features, Contact)", () => {
     renderNavbar();
-    const aboutLink = screen.getByText("About");
-    const featuresLink = screen.getByText("Features");
-    const contactLink = screen.getByText("Contact");
-    expect(aboutLink).toBeDefined();
-    expect(featuresLink).toBeDefined();
-    expect(contactLink).toBeDefined();
+    expect(screen.getByText("Home")).toBeDefined();
+    expect(screen.getByText("Features")).toBeDefined();
+    expect(screen.getByText("Contact")).toBeDefined();
+  });
+
+  test("renders Sign In button on the right", () => {
+    renderNavbar();
+    expect(screen.getByText("Sign In")).toBeDefined();
   });
 });

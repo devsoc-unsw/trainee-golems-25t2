@@ -1,36 +1,92 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import FloatingIcon from "../Components/FloatingIcon";
+import { Navbar } from "../Components/Navbar";
+import Headers from "../Components/Headers";
+import GetStartedButton from "../Components/GetStartedButton";
+import productivity from "../assets/icons/productivity.png";
+import marketplace from "../assets/icons/marketplace.png";
+import accomodation from "../assets/icons/accomodation.png";
+import aiLectureSlide from "../assets/icons/ai-lecture-slides.png";
 import Ballpit from "../Components/Ballpit";
-import logo from "../assets/logo.png";
 
-const Landing: React.FC = () => {
-  const navigate = useNavigate();
+function Landing() {
+  const icons = [
+    {
+      src: productivity,
+      posx: "top-44",
+      posy: "left-16",
+      rotate: "rotate-12",
+    },
+    {
+      src: marketplace,
+      posx: "bottom-44",
+      posy: "right-20",
+      rotate: "rotate-6",
+    },
+    {
+      src: accomodation,
+      posx: "bottom-60",
+      posy: "left-36",
+      rotate: "-rotate-6",
+    },
+    {
+      src: aiLectureSlide,
+      posx: "top-44",
+      posy: "right-16",
+      rotate: "-rotate-12",
+    },
+  ];
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-white relative overflow-hidden transition-colors duration-300">
-      {/* Ball Pit animation */}
-      <Ballpit />
+    <div className="min-h-screen bg-gray-50 relative">
+      {/* Background Ballpit */}
+      <div
+        className="w-full h-full fixed z-0"
+      >
+        <Ballpit
+          count={100}
+          gravity={0.05}
+          colors={[
+            0x8b5cf6, // Original Purple
+            0xffffff, // White
+            0xa855f7, // Purple-500
+            0x9333ea, // Violet-600
+            0x7c3aed, // Violet-700
+            0x6d28d9, // Violet-800
+            0xc084fc, // Purple-400 (lighter)
+            0xd8b4fe, // Purple-300 (pastel)
+            0x5b21b6, // Purple-900 (deep)
+            0xddd6fe, // Purple-200 (very light)
+            0x4c1d95, // Purple-950 (darkest)
+          ]}
+          friction={0.9975}
+          wallBounce={0.95}
+          followCursor={false}
+        />
+      </div>
 
-      {/* Overlayed Heading and Subheading */}
-      <div className="relative z-10 flex flex-col items-center pt-20">
-        <img src={logo} alt="Logo" className="w-16 h-16 mb-4" />
-        <h1 className="text-4xl md:text-5xl font-bold mb-4 flex items-center gap-2 drop-shadow-lg">
-          Your Student Assistance Tool
-        </h1>
-        <h2 className="text-2xl md:text-3xl font-semibold mb-8 text-blue-600 dark:text-blue-300 drop-shadow-lg transition-colors duration-300">
-          All-In-One Place
-        </h2>
+      {/* Navbar */}
+      <Navbar brandName="StuVerse" className="relative z-50" />
 
-        {/* Enter Button */}
-        <button
-          onClick={() => navigate("/dashboard")}
-          className="mt-6 px-6 py-3 bg-blue-500 hover:bg-blue-600 text-white text-lg font-semibold rounded-2xl shadow-lg transition"
-        >
-          Enter
-        </button>
+      {/* Centered Button */}
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <GetStartedButton />
+      </div>
+
+      {/* Headers + Floating Icons */}
+      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8 relative z-10 text-center space-y-6">
+        <Headers className="mx-auto" />
+        {icons.map(({ src, posx, posy, rotate }, index) => (
+          <FloatingIcon
+            key={index}
+            image={src}
+            posx={posx}
+            posy={posy}
+            rotate={rotate}
+          />
+        ))}
       </div>
     </div>
   );
-};
+}
 
 export default Landing;
