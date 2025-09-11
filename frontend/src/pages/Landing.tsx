@@ -10,7 +10,7 @@ import marketplace from "../assets/icons/marketplace.png";
 import accomodation from "../assets/icons/accomodation.png";
 import aiLectureSlide from "../assets/icons/ai-lecture-slides.png";
 import Ballpit from "../Components/Ballpit";
-import { useLoading } from "../contexts/LoadingContext";
+import { useLoading } from "../hooks/useLoading";
 import LoadingScreen from "../Components/LoadingScreen";
 
 function Landing() {

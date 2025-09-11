@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { useUser } from "@clerk/clerk-react";
-import { useLoading } from "../contexts/LoadingContext";
+import { useLoading } from "../hooks/useLoading";
 import LoadingScreen from "./LoadingScreen";
 
 interface ProtectedRouteProps {

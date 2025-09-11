@@ -1,10 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
 import { ClerkProvider } from "@clerk/clerk-react";
-import { Router } from "./Router";
-import { SidebarProvider } from "./contexts/SidebarContext";
-import { LoadingProvider } from "./contexts/LoadingContext";
+import AppWithLoading from "./Components/AppWithLoading";
 import "./index.css";
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -18,18 +15,6 @@ const clerkAppearance = {
     footerText: "hidden",
     footerTextLink: "hidden",
   },
-};
-
-const AppWithLoading = () => {
-  return (
-    <LoadingProvider>
-      <BrowserRouter>
-        <SidebarProvider>
-          <Router />
-        </SidebarProvider>
-      </BrowserRouter>
-    </LoadingProvider>
-  );
 };
 
 createRoot(document.getElementById("root")!).render(
