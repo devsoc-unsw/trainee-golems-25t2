@@ -1,0 +1,37 @@
+/* Fade and slide in from top */
+.slide-in {
+  animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade and slide out to right */
+.slide-out {
+  animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+}
+
+/* Fade and strikethrough for completed */
+.completed-anim {
+  transition: color 0.3s, opacity 0.3s, text-decoration 0.3s;
+  color: #9ca3af; /* gray-400 */
+  opacity: 0.6;
+  text-decoration: line-through;
+}
