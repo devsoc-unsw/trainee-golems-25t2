@@ -28,6 +28,9 @@ const ErrorMap = {
   MISSING_FIELDS: "Missing required fields.",
   TASK_NAME_TOO_LONG: "Task name must be less than 100 characters.",
   TASK_DESCRIPTION_TOO_LONG: "Task description must be less than 500 characters.",
+
+  // Timer/Pomodoro errors
+  INVALID_TIME_RANGE: "The end time must be after the start time.",
 };
 
 // Maps error messages from the enum ErrorMap to HTTP status codes
