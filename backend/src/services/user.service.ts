@@ -1,6 +1,7 @@
 import { prisma } from "../lib/prisma";
 import * as authService from "./auth.service";
 import { ErrorMap } from "../constants/errors";
+import { User } from "../constants/types";
 
 export async function getUserById(id: string) {
   return await prisma.user.findUnique({
@@ -40,7 +41,7 @@ export async function getUserProfile(sessionId: string) {
     throw new Error(ErrorMap.INVALID_SESSION);
   }
   return {
-    name: (user as any).name,
+    name: (user as User).name,
     email: user.email,
     avatar: user.avatar || "default_profile_pic_url",
   };
