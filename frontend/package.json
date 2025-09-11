@@ -12,6 +12,7 @@
     "test:integration": "playwright test"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.46.2",
     "@types/react-router-dom": "^5.3.3",
     "axios": "^1.11.0",
     "gsap": "^3.13.0",
