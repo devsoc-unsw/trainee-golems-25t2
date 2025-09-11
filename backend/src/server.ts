@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.routes";
 import dashRoutes from "./routes/dash.routes";
 import userRoutes from "./routes/user.routes";
+import todoRoutes from "./routes/todo.routes";
+import timerRoutes from "./routes/timer.routes";
 import { errorMiddleware } from "./middleware";
 import { loadData } from "./dataStore";
 
@@ -16,6 +18,8 @@ app.use(cookieParser());
 app.use("", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/dashboard", dashRoutes);
+app.use("/api/todos", todoRoutes);
+app.use("/api/timer", timerRoutes);
 app.use(errorMiddleware);
 
 dotenv.config();

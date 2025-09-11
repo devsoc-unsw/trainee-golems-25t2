@@ -89,6 +89,8 @@ afterAll(async () => {
   await prisma.note.deleteMany({ where: { userId: testUserId } });
   await prisma.accommodation.deleteMany({ where: { userId: testUserId } });
   await prisma.marketplaceItem.deleteMany({ where: { userId: testUserId } });
+  await prisma.studySession.deleteMany({ where: { userId: testUserId } });
+  await prisma.task.deleteMany({ where: { userId: testUserId } });
   await prisma.$disconnect();
 });
 
