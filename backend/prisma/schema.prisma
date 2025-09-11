@@ -79,6 +79,9 @@ model StudySession {
   user        User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   startTime   DateTime        @default(now())
   endTime     DateTime?
+  duration    Int?            // in minutes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model Task {
