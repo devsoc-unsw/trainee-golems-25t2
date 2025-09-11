@@ -42,7 +42,7 @@ export async function getStudyStats(userId: string) {
     today.setHours(0, 0, 0, 0);
 
     let currentStreak = 0;
-    let expected = new Date();
+    const expected = new Date();
     expected.setHours(0, 0, 0, 0);
 
     for (const day of sessionDays) {
