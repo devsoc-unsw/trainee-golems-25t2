@@ -1,4 +1,10 @@
 import { Link } from "react-router-dom";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/clerk-react";
 import logo from "../assets/icons/logo.png";
 
 interface NavbarProps {
@@ -39,11 +45,18 @@ export const Navbar = ({ brandName, className = "" }: NavbarProps) => {
             </Link>
           </div>
 
-          {/* Sign In Button - right side */}
+          {/* Auth Section - right side */}
           <div className="flex items-center">
-            <button className="bg-white border border-gray-300 text-gray-900 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors">
-              Sign In
-            </button>
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="bg-white border border-gray-300 text-gray-900 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors">
+                  Sign In
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
           </div>
         </div>
       </div>

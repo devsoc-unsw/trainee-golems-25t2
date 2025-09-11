@@ -10,7 +10,12 @@ import { LuHouse } from "react-icons/lu";
 import UserInfoSummary from "./UserInfoSummary";
 import { useSidebar } from "../hooks/useSidebar";
 import ThemeToggle from "./ThemeToggle";
-import LogoutButton from "./LogOutButton";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 
 const Sidebar = () => {
@@ -116,8 +121,21 @@ const Sidebar = () => {
 
         {/* User info */}
         <div className="m-auto mb-1">
-          <UserInfoSummary collapsed={collapsed} />
-          <LogoutButton collapsed={collapsed} />
+          <SignedIn>
+            <UserInfoSummary collapsed={collapsed} />
+            <div className="flex justify-center mt-2">
+              <UserButton afterSignOutUrl="/" />
+            </div>
+          </SignedIn>
+          <SignedOut>
+            <div className="flex justify-center">
+              <SignInButton mode="modal">
+                <button className="flex items-center w-full border-2 border-[#8B5CF6] rounded-[3rem] h-14 p-2 text-sm font-semibold">
+                  {!collapsed && <span className="mx-auto">Sign In</span>}
+                </button>
+              </SignInButton>
+            </div>
+          </SignedOut>
         </div>
       </aside>
     </>
