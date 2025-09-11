@@ -45,3 +45,28 @@ export async function getUserProfile(sessionId: string) {
     avatar: user.avatar || "default_profile_pic_url",
   };
 }
+
+// Create a local user row for Clerk signups (id optional; we key by email)
+export interface ClerkUserPayload {
+  id?: string;
+  email: string;
+  name: string;
+  avatar?: string | null;
+}
+
+export async function createOrGetClerkUser(payload: ClerkUserPayload) {
+  const { id, email, name, avatar } = payload;
+
+  const existing = await prisma.user.findUnique({ where: { email } });
+  if (existing) return existing;
+
+  return await prisma.user.create({
+    data: {
+      ...(id ? { id } : {}),
+      email,
+      name,
+      password: "", // not used for Clerk-managed accounts
+      avatar: avatar ?? null,
+    },
+  });
+}
