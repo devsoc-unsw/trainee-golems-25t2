@@ -40,7 +40,7 @@ export async function getUserProfile(sessionId: string) {
     throw new Error(ErrorMap.INVALID_SESSION);
   }
   return {
-    username: user.name,
+    name: (user as any).name,
     email: user.email,
     avatar: user.avatar || "default_profile_pic_url",
   };
