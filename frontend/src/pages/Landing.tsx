@@ -7,70 +7,8 @@ import marketplace from "../assets/icons/marketplace.png";
 import accomodation from "../assets/icons/accomodation.png";
 import aiLectureSlide from "../assets/icons/ai-lecture-slides.png";
 import Ballpit from "../Components/Ballpit";
-import { useEffect, useState } from "react";
-import { useUser } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
 
 function Landing() {
-  const { isLoaded, isSignedIn, user } = useUser();
-  const navigate = useNavigate();
-  const [syncStatus, setSyncStatus] = useState("idle"); // idle, syncing, success, error
-
-  useEffect(() => {
-    const syncAndRedirect = async () => {
-      if (!(isLoaded && isSignedIn && user)) return;
-
-      setSyncStatus("syncing");
-
-      try {
-        const API_BASE =
-          import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
-
-        const response = await fetch(`${API_BASE}/api/user/clerk`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            clerkId: user.id, // Use clerkId instead of undefined id
-            email: user.primaryEmailAddress?.emailAddress || "",
-            name: user.fullName || user.firstName || "No Name",
-            firstName: user.firstName || "",
-            lastName: user.lastName || "",
-            username: user.username || "",
-            avatar: user.imageUrl || "",
-          }),
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        console.log("User sync successful:", result);
-        setSyncStatus("success");
-
-        // Only redirect on successful sync
-        navigate("/dashboard", { replace: true });
-      } catch (error) {
-        console.error("User sync failed:", error);
-        setSyncStatus("error");
-
-        // You might want to show an error message to the user
-        // or still redirect them but handle the sync later
-
-        // Option 1: Still redirect (current behavior)
-        navigate("/dashboard", { replace: true });
-
-        // Option 2: Show error and stay on landing page
-        // alert("Failed to sync user data. Please try again.");
-      }
-    };
-
-    syncAndRedirect();
-  }, [isLoaded, isSignedIn, user, navigate]);
-
   const icons = [
     {
       src: productivity,
@@ -97,20 +35,6 @@ function Landing() {
       rotate: "-rotate-12",
     },
   ];
-
-  // Show loading state while syncing
-  if (syncStatus === "syncing") {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-purple-600 mx-auto"></div>
-          <p className="mt-4 text-lg text-gray-600">
-            Setting up your account...
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 relative">
