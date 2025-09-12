@@ -49,9 +49,9 @@ export const Navbar = ({ brandName, className = "" }: NavbarProps) => {
           <div className="flex items-center gap-2">
             <SignedOut>
               <SignInButton mode="modal">
-                <button className="bg-white border border-gray-300 text-gray-900 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors">
+                <span className="bg-white border border-gray-300 text-gray-900 px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-50 transition-colors cursor-pointer">
                   Sign In
-                </button>
+                </span>
               </SignInButton>
             </SignedOut>
             <SignedIn>
