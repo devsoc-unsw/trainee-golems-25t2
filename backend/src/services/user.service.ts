@@ -66,7 +66,7 @@ export async function createOrGetClerkUser(payload: ClerkUserPayload) {
       ...(id ? { id } : {}),
       email,
       name,
-      password: "", // not used for Clerk-managed accounts
+      password: "",
       avatar: avatar ?? null,
     },
   });
