@@ -45,16 +45,31 @@ describe("timer.service", () => {
   describe("getStudyStats", () => {
     it("returns correct stats for user", async () => {
       const now = new Date();
-      // Create two sessions
-      await createStudySession(userId, now.toISOString(), new Date(now.getTime() + 30 * 60 * 1000).toISOString());
-      await createStudySession(userId, new Date(now.getTime() + 60 * 60 * 1000).toISOString(), new Date(now.getTime() + 90 * 60 * 1000).toISOString());
+      // Create sessions on consecutive days to test streak
+      const today = new Date(now);
+      const yesterday = new Date(now);
+      yesterday.setDate(yesterday.getDate() - 1);
+      
+      // Session today
+      await createStudySession(
+        userId, 
+        today.toISOString(), 
+        new Date(today.getTime() + 30 * 60 * 1000).toISOString()
+      );
+      
+      // Session yesterday
+      await createStudySession(
+        userId, 
+        yesterday.toISOString(), 
+        new Date(yesterday.getTime() + 30 * 60 * 1000).toISOString()
+      );
 
       const stats = await getStudyStats(userId);
 
       expect(stats.totalSessions).toBeGreaterThanOrEqual(2);
       expect(stats.totalStudyTime).toBeGreaterThan(0);
       expect(stats.longestSession).toBeGreaterThan(0);
-      expect(stats.currentStreak).toBe(1);
+      expect(stats.currentStreak).toBe(2); // Should be 2 days (today + yesterday)
     });
   });
 });
