@@ -3,7 +3,7 @@ import { app } from "../server";
 import { prisma } from "../lib/prisma";
 
 let testUserId: string;
-let testSessionId = "test-todo-session-id";
+let testSessionId = `test-todo-session-id-${Date.now()}`;
 let createdTaskId: string;
 
 beforeAll(async () => {
@@ -28,8 +28,8 @@ beforeAll(async () => {
 
 afterAll(async () => {
     await prisma.task.deleteMany({ where: { userId: testUserId } });
-    await prisma.user.delete({ where: { id: testUserId } });
     await prisma.session.deleteMany({ where: { userId: testUserId } });
+    await prisma.user.delete({ where: { id: testUserId } });
     await prisma.$disconnect();
 });
 
