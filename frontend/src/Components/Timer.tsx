@@ -8,8 +8,14 @@ type SessionType = "Focus" | "Break";
 const durations = [15, 20, 25, 30, 45, 60];
 
 const Timer: React.FC = () => {
-	const [minutes, setMinutes] = React.useState(25);
-	const [seconds, setSeconds] = React.useState(0);
+	const [minutes, setMinutes] = React.useState(() => {
+		const saved = localStorage.getItem('timer-minutes');
+		return saved ? parseInt(saved, 10) : 25;
+	});
+	const [seconds, setSeconds] = React.useState(() => {
+		const saved = localStorage.getItem('timer-seconds');
+		return saved ? parseInt(saved, 10) : 0;
+	});
 	const [isActive, setIsActive] = React.useState(false);
 	const isActiveRef = React.useRef(isActive);
 	React.useEffect(() => { isActiveRef.current = isActive; }, [isActive]);
@@ -149,6 +155,8 @@ const Timer: React.FC = () => {
 		setSessionType("Focus");
 		setMinutes(duration);
 		setSeconds(0);
+		localStorage.setItem('timer-minutes', duration.toString());
+		localStorage.setItem('timer-seconds', '0');
 		if (isActive) {
 			endTimeRef.current = Date.now() + duration * 60 * 1000;
 		} else {
@@ -165,6 +173,8 @@ const Timer: React.FC = () => {
 
 		setMinutes(newMinutes);
 		setSeconds(newSeconds);
+		localStorage.setItem('timer-minutes', newMinutes.toString());
+		localStorage.setItem('timer-seconds', newSeconds.toString());
 
 		if (isActive && endTimeRef.current) {
 			endTimeRef.current += delta * 60 * 1000;
