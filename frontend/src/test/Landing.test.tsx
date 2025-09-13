@@ -9,6 +9,20 @@ vi.mock("../Components/Ballpit", () => ({
   default: () => <div data-testid="ballpit" />,
 }));
 
+// Mock Clerk so tests don't require ClerkProvider
+vi.mock("@clerk/clerk-react", () => ({
+  SignedOut: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  SignedIn: () => null,
+  SignInButton: ({ children }: { children: React.ReactNode }) => (
+    <button>{children}</button>
+  ),
+  SignUpButton: ({ children }: { children: React.ReactNode }) => (
+    <button>{children}</button>
+  ),
+  UserButton: () => <div>User</div>,
+  useUser: () => ({ isSignedIn: false, isLoaded: true }),
+}));
+
 const renderLanding = () => {
   return render(
     <BrowserRouter>

@@ -1,4 +1,5 @@
 import { prisma } from "../lib/prisma";
+import type { User } from "@prisma/client";
 import { generateSessionId } from "../dataStore";
 import {
   isValidEmail,
@@ -113,7 +114,7 @@ export async function authLogout(sessionId: string) {
 /**
  * Get user by session ID
  */
-export async function getUserBySession(sessionId: string) {
+export async function getUserBySession(sessionId: string): Promise<User | null> {
   const session = await prisma.session.findUnique({
     where: { sessionId },
     include: { user: true },

@@ -39,9 +39,7 @@ function Landing() {
   return (
     <div className="min-h-screen bg-gray-50 relative">
       {/* Background Ballpit */}
-      <div
-        className="w-full h-full fixed z-0"
-      >
+      <div className="w-full h-full fixed z-0">
         <Ballpit
           count={100}
           gravity={0.05}
