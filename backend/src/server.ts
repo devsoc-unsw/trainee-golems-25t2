@@ -8,6 +8,7 @@ import userRoutes from "./routes/user.routes";
 import todoRoutes from "./routes/todo.routes";
 import timerRoutes from "./routes/timer.routes";
 import { errorMiddleware } from "./middleware";
+import aiNotesRoutes from "./routes/ainotes.routes";
 import { loadData } from "./dataStore";
 
 export const app = express();
@@ -28,6 +29,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/dashboard", dashRoutes);
 app.use("/api/todos", todoRoutes);
 app.use("/api/timer", timerRoutes);
+app.use("", aiNotesRoutes);
 app.use(errorMiddleware);
 
 dotenv.config();
