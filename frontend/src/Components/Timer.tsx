@@ -11,10 +11,35 @@ const Timer: React.FC = () => {
 	const [minutes, setMinutes] = React.useState(25);
 	const [seconds, setSeconds] = React.useState(0);
 	const [isActive, setIsActive] = React.useState(false);
+	const isActiveRef = React.useRef(isActive);
+	React.useEffect(() => { isActiveRef.current = isActive; }, [isActive]);
 	const [sessionType, setSessionType] = React.useState<SessionType>("Focus");
 	const endTimeRef = React.useRef<number | null>(null);
 	const focusSoundRef = React.useRef<HTMLAudioElement | null>(null);
 	const breakSoundRef = React.useRef<HTMLAudioElement | null>(null);
+
+	// Keyboard shortcut: Space bar to start/pause
+	React.useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			const tag = (e.target as HTMLElement)?.tagName;
+			const isEditable = (e.target as HTMLElement)?.isContentEditable;
+			if (tag === 'INPUT' || tag === 'TEXTAREA' || isEditable) return;
+			if (e.code === 'Space' || e.key === ' ') {
+				e.preventDefault();
+				// Use the latest isActive value
+				if (isActiveRef.current) {
+					// If running, pause
+					setIsActive(false);
+					endTimeRef.current = null;
+				} else {
+					// If paused, start
+					setIsActive(true);
+				}
+			}
+		};
+		window.addEventListener('keydown', handleKeyDown);
+		return () => window.removeEventListener('keydown', handleKeyDown);
+	}, []);
 
 	// Preload sounds
 	useEffect(() => {
