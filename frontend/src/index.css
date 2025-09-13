@@ -11,3 +11,13 @@ body {
 .dark body {
   @apply bg-neutral-950 text-white transition-colors duration-300;
 }
+
+
+/* Fade-in animation for Marketplace cards */
+.animate-fadein {
+  animation: fadein 0.5s both;
+}
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: none; }
+}
