@@ -15,6 +15,14 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(cookieParser());
+// CORS before routes (allow frontend dev server)
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use("", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/dashboard", dashRoutes);

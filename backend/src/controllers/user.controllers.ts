@@ -17,3 +17,47 @@ async function profile(req: Request, res: Response) {
 }
 
 export { profile }
+
+export async function upsertClerk(req: Request, res: Response) {
+  try {
+    const {
+      id,
+      clerkId,
+      email,
+      name: rawName,
+      firstName,
+      lastName,
+      avatar,
+    } = req.body as {
+      id?: string;
+      clerkId?: string;
+      email: string;
+      name?: string;
+      firstName?: string;
+      lastName?: string;
+      avatar?: string | null;
+    };
+
+    if (!email) {
+      return res.status(400).json({ error: "Missing required field: email" });
+    }
+
+    const name = (rawName ?? `${firstName ?? ""} ${lastName ?? ""}`)
+      .trim()
+      .replace(/\s+/g, " ");
+
+    const resolvedId = id ?? clerkId; // optional, if you want to persist Clerk ID as primary key
+
+    const user = await userService.createOrGetClerkUser({
+      id: resolvedId,
+      email,
+      name: name || "No Name",
+      avatar,
+    });
+    return res.json(user);
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "An error occurred";
+    const statusCode = StatusCodeMap[message] || 500;
+    return res.status(statusCode).json({ error: message });
+  }
+}

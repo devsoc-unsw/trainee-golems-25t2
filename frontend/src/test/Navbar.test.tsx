@@ -1,6 +1,17 @@
 import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Navbar } from "../Components/Navbar";
+import { vi } from "vitest";
+
+// Mock Clerk so tests don't require ClerkProvider
+vi.mock("@clerk/clerk-react", () => ({
+  SignedOut: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+  SignedIn: () => null,
+  SignInButton: ({ children }: { children: React.ReactNode }) => (
+    <button>{children}</button>
+  ),
+  UserButton: () => <div>User</div>,
+}));
 
 const renderNavbar = (props = {}) => {
   return render(

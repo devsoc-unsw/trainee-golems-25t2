@@ -7,4 +7,7 @@ const router = express.Router();
 // Get user profile
 router.get("/profile", sessionMiddleware, userController.profile);
 
+// Upsert user from Clerk signup
+router.post("/clerk", userController.upsertClerk);
+
 export default router;
