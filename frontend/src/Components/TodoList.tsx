@@ -9,16 +9,40 @@ interface Task {
 }
 
 
+
+const LOCAL_STORAGE_KEY = 'todos-auto-save';
+
 const TodoListWidget: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  // Load tasks from localStorage on mount
+  const [tasks, setTasks] = useState<Task[]>(() => {
+    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (saved) {
+      try {
+        return JSON.parse(saved) as Task[];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  });
   const [input, setInput] = useState('');
   const [deleting, setDeleting] = useState<number[]>([]);
-  const nextId = useRef(1);
+  const nextId = useRef(
+    (Array.isArray(tasks) && tasks.length > 0)
+      ? Math.max(...tasks.map(t => t.id)) + 1
+      : 1
+  );
   const prevTasksRef = useRef<number[]>([]);
+
 
   // Track previous task ids for slide-in animation
   React.useEffect(() => {
     prevTasksRef.current = tasks.map(t => t.id);
+  }, [tasks]);
+
+  // Auto-save tasks to localStorage whenever they change
+  React.useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(tasks));
   }, [tasks]);
 
   const handleAddTask = (e: React.FormEvent) => {
