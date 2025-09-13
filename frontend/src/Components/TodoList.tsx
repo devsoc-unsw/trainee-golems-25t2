@@ -54,7 +54,7 @@ const TodoListWidget: React.FC = () => {
   ];
 
   return (
-    <div className="w-full max-w-md mx-auto bg-white rounded-xl shadow-lg p-6">
+  <div className="w-full max-w-md mx-auto bg-white dark:bg-neutral-900 dark:text-gray-100 rounded-xl shadow-lg p-6">
       <h2 className="text-xl font-bold mb-4">Today's Tasks</h2>
       <form onSubmit={handleAddTask} className="flex mb-4 gap-2">
         <input
