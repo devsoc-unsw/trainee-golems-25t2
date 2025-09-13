@@ -95,6 +95,8 @@ const Sidebar = () => {
                   navigate("/productivity");
                 } else if (item.name === "Dashboard") {
                   navigate("/dashboard");
+                } else if (item.name === "AI Notes Conversion") {
+                  navigate("/ai-notes");
                 }
               }}
             >
