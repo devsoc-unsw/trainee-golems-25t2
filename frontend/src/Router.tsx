@@ -4,6 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import Productivity from "./pages/Productivity";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import PublicRoute from "./Components/PublicRoute";
+import SpotifySuccess from "./pages/SpotifySuccess";
 
 export const Router = () => {
   return (
@@ -32,6 +33,7 @@ export const Router = () => {
           </ProtectedRoute>
         }
       />
+      <Route path="/spotify/success" element={<SpotifySuccess />} />
     </Routes>
   );
 };
