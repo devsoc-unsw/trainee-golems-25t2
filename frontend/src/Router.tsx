@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Landing from "./pages/Landing";
 import Dashboard from "./pages/Dashboard";
 import Productivity from "./pages/Productivity";
+import AINotes from "./pages/AINotes";
 import Marketplace from "./pages/Marketplace";
 import MarketplaceItemDetails from "./pages/MarketplaceItemDetails";
 import ProtectedRoute from "./Components/ProtectedRoute";
@@ -36,6 +37,14 @@ export const Router = () => {
         }
       />
       <Route path="/spotify/success" element={<SpotifySuccess />} />
+      <Route
+        path="/ai-notes"
+        element={
+          <ProtectedRoute>
+            <AINotes />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/marketplace"
         element={

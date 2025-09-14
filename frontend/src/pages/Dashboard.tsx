@@ -1,10 +1,53 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import DotGrid from "../Components/DotGrid";
 import Sidebar from "../Components/Sidebar";
 import { useSidebar } from "../hooks/useSidebar";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard: React.FC = () => {
   const { collapsed } = useSidebar();
+  const navigate = useNavigate();
+
+  type GeneratedNote = {
+    id: string;
+    title: string;
+    content: string | null;
+    status: "QUEUED" | "PROCESSING" | "COMPLETED" | "FAILED";
+    quality: "SIMPLE" | "BALANCED" | "DETAILED";
+    createdAt: string;
+  };
+
+  const backend = useMemo(
+    () => import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:3001",
+    []
+  );
+  const [aiNotes, setAiNotes] = useState<GeneratedNote[]>([]);
+  const [loadingNotes, setLoadingNotes] = useState(false);
+  const [notesError, setNotesError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function loadNotes() {
+      try {
+        setLoadingNotes(true);
+        setNotesError(null);
+        const res = await fetch(`${backend}/api/ainotes`, {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Failed to load AI notes");
+        const data = (await res.json()) as GeneratedNote[];
+        if (isMounted) setAiNotes(data);
+      } catch (err) {
+        if (isMounted) setNotesError((err as Error).message);
+      } finally {
+        if (isMounted) setLoadingNotes(false);
+      }
+    }
+    loadNotes();
+    return () => {
+      isMounted = false;
+    };
+  }, [backend]);
   const currentTime = new Date();
   const hour = currentTime.getHours();
 
@@ -46,242 +89,61 @@ const Dashboard: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Recent Notes Section */}
+            {/* AI Notes Summary (replaces static Recent Notes) */}
             <div className="bg-white dark:bg-neutral-800 rounded-xl shadow-lg p-8 border border-slate-200 dark:border-neutral-700 transition-colors duration-300">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-2xl font-semibold text-slate-800 dark:text-white">
-                  Recent Notes
+                  AI Notes Summary
                 </h3>
-                <div className="flex space-x-3">
-                  <button className="bg-purple-600 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
-                    Upload New Note
-                  </button>
-                  <button className="bg-yellow-500 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-yellow-600 transition-colors">
-                    View All Notes
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                {/* COMP1511 Note */}
-                <div className="border border-slate-200 dark:border-neutral-700 rounded-lg p-6 hover:shadow-lg hover:border-purple-300 transition-all duration-200 cursor-pointer group">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-lg font-semibold text-slate-800 dark:text-white">
-                      COMP1511
-                    </h4>
-                    <span className="text-sm text-slate-500 dark:text-neutral-400">
-                      30 min ago
-                    </span>
-                  </div>
-
-                  {/* Thumbnail and Content Row */}
-                  <div className="flex space-x-4 mb-4">
-                    {/* Thumbnail Placeholder */}
-                    <div className="w-20 h-20 bg-slate-200 dark:bg-neutral-700 rounded-lg flex-shrink-0"></div>
-
-                    {/* Note Content */}
-                    <div className="flex-1 bg-slate-100 dark:bg-neutral-900 rounded p-4 text-sm font-mono text-slate-700 dark:text-neutral-300 transition-colors duration-300">
-                      #include &lt;template&gt;
-                      <br />
-                      Hello World
-                    </div>
-                  </div>
-
-                  {/* Audio Player Component */}
-                  <div className="bg-slate-50 dark:bg-neutral-800 rounded-lg p-4">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <button className="w-10 h-10 bg-purple-600 text-white rounded-full flex items-center justify-center hover:bg-purple-700 transition-colors group-hover:scale-105">
-                        <svg
-                          className="w-5 h-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                      <div className="flex-1">
-                        <div className="text-sm font-medium text-slate-700 dark:text-neutral-300 mb-1">
-                          Lecture 5: Object-Oriented Programming
-                        </div>
-                        <div className="text-xs text-slate-500 dark:text-neutral-400">
-                          15:32 / 45:18
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Waveform Visual */}
-                    <div className="flex items-end space-x-1 h-8">
-                      {[
-                        2, 4, 6, 8, 12, 16, 14, 10, 8, 6, 4, 3, 5, 7, 9, 11, 13,
-                        15, 12, 8,
-                      ].map((height, index) => (
-                        <div
-                          key={index}
-                          className="bg-purple-400 rounded-sm flex-1 hover:bg-purple-500 transition-colors"
-                          style={{ height: `${height}px` }}
-                        ></div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* COMP1521 Note */}
-                <div className="border border-slate-200 dark:border-neutral-700 rounded-lg p-6 hover:shadow-lg hover:border-yellow-300 transition-all duration-200 cursor-pointer group">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-lg font-semibold text-slate-800 dark:text-white">
-                      COMP1521
-                    </h4>
-                    <span className="text-sm text-slate-500 dark:text-neutral-400">
-                      2 h ago
-                    </span>
-                  </div>
-
-                  {/* Thumbnail and Content Row */}
-                  <div className="flex space-x-4 mb-4">
-                    {/* Thumbnail Placeholder */}
-                    <div className="w-20 h-20 bg-slate-200 dark:bg-neutral-700 rounded-lg flex-shrink-0"></div>
-
-                    {/* Note Content */}
-                    <div className="flex-1 bg-slate-100 dark:bg-neutral-900 rounded p-4 text-sm font-mono text-slate-700 dark:text-neutral-300 transition-colors duration-300">
-                      Level Language
-                      <br />
-                      Compiler
-                      <br />
-                      MIPS Assembly
-                    </div>
-                  </div>
-
-                  {/* Audio Player Component */}
-                  <div className="bg-slate-50 dark:bg-neutral-800 rounded-lg p-4">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <button className="w-10 h-10 bg-yellow-500 text-white rounded-full flex items-center justify-center hover:bg-yellow-600 transition-colors group-hover:scale-105">
-                        <svg
-                          className="w-5 h-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                      <div className="flex-1">
-                        <div className="text-sm font-medium text-slate-700 dark:text-neutral-300 mb-1">
-                          Tutorial 3: Assembly Basics
-                        </div>
-                        <div className="text-xs text-slate-500 dark:text-neutral-400">
-                          8:15 / 32:45
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Waveform Visual */}
-                    <div className="flex items-end space-x-1 h-8">
-                      {[
-                        3, 5, 7, 9, 11, 13, 15, 17, 19, 16, 14, 12, 10, 8, 6, 4,
-                        6, 8, 10, 12,
-                      ].map((height, index) => (
-                        <div
-                          key={index}
-                          className="bg-yellow-400 rounded-sm flex-1 hover:bg-yellow-500 transition-colors"
-                          style={{ height: `${height}px` }}
-                        ></div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* COMP2521 Note */}
-                <div className="border border-slate-200 dark:border-neutral-700 rounded-lg p-6 hover:shadow-lg hover:border-blue-300 transition-all duration-200 cursor-pointer group">
-                  <div className="flex items-center justify-between mb-3">
-                    <h4 className="text-lg font-semibold text-slate-800 dark:text-white">
-                      COMP2521
-                    </h4>
-                    <span className="text-sm text-slate-500 dark:text-neutral-400">
-                      1 day ago
-                    </span>
-                  </div>
-
-                  {/* Thumbnail and Content Row */}
-                  <div className="flex space-x-4 mb-4">
-                    {/* Thumbnail Placeholder */}
-                    <div className="w-20 h-20 bg-slate-200 dark:bg-neutral-700 rounded-lg flex-shrink-0"></div>
-
-                    {/* Note Content */}
-                    <div className="flex-1 bg-slate-100 dark:bg-neutral-900 rounded p-4 text-sm font-mono text-slate-700 dark:text-neutral-300 transition-colors duration-300">
-                      Binary Tree Structure
-                      <br />
-                      Nodes: 1-15
-                    </div>
-                  </div>
-
-                  {/* Audio Player Component */}
-                  <div className="bg-slate-50 dark:bg-neutral-800 rounded-lg p-4">
-                    <div className="flex items-center space-x-3 mb-3">
-                      <button className="w-10 h-10 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors group-hover:scale-105">
-                        <svg
-                          className="w-5 h-5"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </button>
-                      <div className="flex-1">
-                        <div className="text-sm font-medium text-slate-700 dark:text-neutral-300 mb-1">
-                          Lecture 8: Tree Data Structures
-                        </div>
-                        <div className="text-xs text-slate-500 dark:text-neutral-400">
-                          22:18 / 52:30
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Waveform Visual */}
-                    <div className="flex items-end space-x-1 h-8">
-                      {[
-                        4, 6, 8, 10, 12, 14, 16, 18, 20, 18, 16, 14, 12, 10, 8,
-                        6, 8, 10, 12, 14,
-                      ].map((height, index) => (
-                        <div
-                          key={index}
-                          className="bg-blue-400 rounded-sm flex-1 hover:bg-blue-500 transition-colors"
-                          style={{ height: `${height}px` }}
-                        ></div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* AI Overview Button */}
-              <div className="mt-8">
-                <button className="w-full bg-blue-600 text-white py-4 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors flex items-center justify-center space-x-3">
-                  <svg
-                    className="w-6 h-6"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                  <span className="text-lg">Listen AI Overview</span>
+                <button
+                  className="bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+                  onClick={() => navigate("/ai-notes")}
+                >
+                  Open AI Notes
                 </button>
+              </div>
+
+              <div className="space-y-3">
+                {loadingNotes && (
+                  <div className="text-sm text-slate-500 dark:text-neutral-400">
+                    Loading...
+                  </div>
+                )}
+                {notesError && (
+                  <div className="text-sm text-red-600 dark:text-red-400">
+                    {notesError}
+                  </div>
+                )}
+                {!loadingNotes &&
+                  !notesError &&
+                  aiNotes.slice(0, 4).map((n) => (
+                    <button
+                      key={n.id}
+                      onClick={() => navigate("/ai-notes")}
+                      className="w-full text-left border border-slate-200 dark:border-neutral-700 rounded-lg p-4 hover:shadow-lg hover:border-blue-300 transition-all duration-200 cursor-pointer group"
+                    >
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="text-base font-semibold text-slate-800 dark:text-white truncate pr-2">
+                          {n.title}
+                        </h4>
+                        <span className="text-xs px-2 py-1 rounded bg-slate-100 dark:bg-neutral-900 text-slate-600 dark:text-neutral-300">
+                          {n.quality} · {n.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-slate-600 dark:text-neutral-300 line-clamp-2">
+                        {n.content
+                          ? n.content
+                          : n.status === "FAILED"
+                          ? "Failed to generate notes."
+                          : "Processing..."}
+                      </p>
+                    </button>
+                  ))}
+                {!loadingNotes && !notesError && aiNotes.length === 0 && (
+                  <div className="text-sm text-slate-500 dark:text-neutral-400">
+                    No AI notes yet. Generate some in the AI Notes page.
+                  </div>
+                )}
               </div>
             </div>
 

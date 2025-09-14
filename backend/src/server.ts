@@ -9,6 +9,7 @@ import todoRoutes from "./routes/todo.routes";
 import timerRoutes from "./routes/timer.routes";
 import spotifyRoutes from "./routes/spotify.routes";
 import { errorMiddleware } from "./middleware";
+import aiNotesRoutes from "./routes/ainotes.routes";
 import { loadData } from "./dataStore";
 
 dotenv.config();
@@ -32,6 +33,7 @@ app.use("/api/dashboard", dashRoutes);
 app.use("/api/todos", todoRoutes);
 app.use("/api/timer", timerRoutes);
 app.use("", spotifyRoutes);
+app.use("", aiNotesRoutes);
 app.use(errorMiddleware);
 
 function startServer() {

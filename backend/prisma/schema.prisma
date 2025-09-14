@@ -29,6 +29,7 @@ model User {
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
   SpotifyAccount SpotifyAccount?
+  GeneratedNote  GeneratedNote[]
 }
 
 model Session {
@@ -108,4 +109,32 @@ model SpotifyAccount {
   expiresAt    DateTime
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+enum NoteQuality {
+  SIMPLE
+  BALANCED
+  DETAILED
+}
+
+enum NoteStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model GeneratedNote {
+  id             String      @id @default(cuid())
+  userId         String
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title          String
+  content        String?
+  quality        NoteQuality
+  status         NoteStatus  @default(QUEUED)
+  errorMessage   String?
+  sourceFileName String
+  sourceFileSize Int
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
 }
