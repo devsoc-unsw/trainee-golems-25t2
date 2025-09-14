@@ -153,9 +153,9 @@ export const marketplaceService = {
                     }
                 }
             });
-        } catch (error: any) {
+        } catch (error: unknown) {
             // If record not found, return null
-            if (error.code === 'P2025') {
+            if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
                 return null;
             }
             throw error;
@@ -172,9 +172,9 @@ export const marketplaceService = {
                     id: id
                 }
             });
-        } catch (error: any) {
+        } catch (error: unknown) {
             // If record not found, return null
-            if (error.code === 'P2025') {
+            if (error && typeof error === 'object' && 'code' in error && error.code === 'P2025') {
                 return null;
             }
             throw error;
