@@ -1,5 +1,5 @@
 import axios from "axios";
-const URL = "http://127.0.0.1:3001";
+const URL = "http://localhost:3001";
 
 export const loginUser = async (email: string, password: string) => {
   try {

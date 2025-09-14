@@ -62,6 +62,7 @@ export async function upsertClerk(req: Request, res: Response) {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      domain: process.env.NODE_ENV === "production" ? undefined : undefined, // Allow for localhost and 127.0.0.1
     });
     return res.json(user);
   } catch (err: unknown) {

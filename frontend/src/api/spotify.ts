@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env?.VITE_BACKEND_URL || "http://127.0.0.1:3001";
+const BASE_URL = import.meta.env?.VITE_BACKEND_URL || "http://localhost:3001";
 
 function url(path: string) {
   return `${BASE_URL}${path}`;
@@ -64,11 +64,11 @@ export const SpotifyApi = {
     const isLocalhost = window.location.hostname === "localhost";
     const sid = readCookie("sessionId");
     if (isLocalhost && sid) {
-      const u = new URL("http://127.0.0.1:3001/api/spotify/bridge-auth");
+      const u = new URL("http://localhost:3001/api/spotify/bridge-auth");
       u.searchParams.set("sid", sid);
       return u.toString();
     }
-    return "http://127.0.0.1:3001/api/spotify/auth";
+    return "http://localhost:3001/api/spotify/auth";
   },
   status() {
     return request<PlaybackStatus>("/api/spotify/status");
