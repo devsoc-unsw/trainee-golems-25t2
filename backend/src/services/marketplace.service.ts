@@ -132,36 +132,52 @@ export const marketplaceService = {
      * Update a marketplace item
      */
     async updateItem(id: string, data: UpdateMarketplaceItemData) {
-        return await prisma.marketplaceItem.update({
-            where: {
-                id: id
-            },
-            data: {
-                ...(data.title && { title: data.title }),
-                ...(data.description && { description: data.description }),
-                ...(data.price && { price: data.price }),
-                ...(data.status && { status: data.status })
-            },
-            include: {
-                user: {
-                    select: {
-                        id: true,
-                        name: true,
-                        email: true
+        try {
+            return await prisma.marketplaceItem.update({
+                where: {
+                    id: id
+                },
+                data: {
+                    ...(data.title && { title: data.title }),
+                    ...(data.description && { description: data.description }),
+                    ...(data.price && { price: data.price }),
+                    ...(data.status && { status: data.status })
+                },
+                include: {
+                    user: {
+                        select: {
+                            id: true,
+                            name: true,
+                            email: true
+                        }
                     }
                 }
+            });
+        } catch (error: any) {
+            // If record not found, return null
+            if (error.code === 'P2025') {
+                return null;
             }
-        });
+            throw error;
+        }
     },
 
     /**
      * Delete a marketplace item
      */
     async deleteItem(id: string) {
-        return await prisma.marketplaceItem.delete({
-            where: {
-                id: id
+        try {
+            return await prisma.marketplaceItem.delete({
+                where: {
+                    id: id
+                }
+            });
+        } catch (error: any) {
+            // If record not found, return null
+            if (error.code === 'P2025') {
+                return null;
             }
-        });
+            throw error;
+        }
     }
 };
