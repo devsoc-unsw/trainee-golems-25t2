@@ -25,7 +25,7 @@ export interface UpdateTaskRequest {
 }
 
 class TodoService {
-  private async makeRequest<T>(method: string, url: string, data?: any): Promise<T> {
+  private async makeRequest<T>(method: string, url: string, data?: unknown): Promise<T> {
     try {
       console.log(`Making ${method} request to ${API_BASE}${url}`);
       console.log('Request data:', data);
@@ -40,12 +40,13 @@ class TodoService {
       
       console.log(`Response from ${method} ${url}:`, response.data);
       return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(`Todo API Error (${method} ${url}):`, error);
-      if (error.response) {
-        console.error('Response status:', error.response.status);
-        console.error('Response data:', error.response.data);
-        console.error('Response headers:', error.response.headers);
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response: { status: number; data: unknown; headers: unknown } };
+        console.error('Response status:', axiosError.response.status);
+        console.error('Response data:', axiosError.response.data);
+        console.error('Response headers:', axiosError.response.headers);
       }
       throw error;
     }
