@@ -6,6 +6,7 @@ import Marketplace from "./pages/Marketplace";
 import MarketplaceItemDetails from "./pages/MarketplaceItemDetails";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import PublicRoute from "./Components/PublicRoute";
+import SpotifySuccess from "./pages/SpotifySuccess";
 
 export const Router = () => {
   return (
@@ -34,6 +35,7 @@ export const Router = () => {
           </ProtectedRoute>
         }
       />
+      <Route path="/spotify/success" element={<SpotifySuccess />} />
       <Route
         path="/marketplace"
         element={
