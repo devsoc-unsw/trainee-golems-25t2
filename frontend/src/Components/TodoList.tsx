@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from './todo-animations.module.css';
 import { FaTrash } from 'react-icons/fa';
 
@@ -27,16 +27,49 @@ const TodoListWidget: React.FC = () => {
   });
   const [input, setInput] = useState('');
   const [deleting, setDeleting] = useState<number[]>([]);
-  const nextId = useRef(
-    (Array.isArray(tasks) && tasks.length > 0)
-      ? Math.max(...tasks.map(t => t.id)) + 1
-      : 1
-  );
+  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
+  const nextId = useRef(1);
   const prevTasksRef = useRef<number[]>([]);
 
+  // Load tasks from localStorage on component mount
+  useEffect(() => {
+    const savedTasks = localStorage.getItem('todoTasks');
+    const savedNextId = localStorage.getItem('todoNextId');
+    
+    if (savedTasks) {
+      try {
+        const parsedTasks = JSON.parse(savedTasks);
+        setTasks(parsedTasks);
+      } catch (error) {
+        console.error('Error parsing saved tasks:', error);
+      }
+    }
+    
+    if (savedNextId) {
+      try {
+        nextId.current = parseInt(savedNextId, 10);
+      } catch (error) {
+        console.error('Error parsing saved nextId:', error);
+      }
+    }
+    
+    setIsInitialLoadComplete(true);
+  }, []);
+
+  // Save tasks to localStorage whenever tasks change (but only after initial load)
+  useEffect(() => {
+    if (isInitialLoadComplete) {
+      localStorage.setItem('todoTasks', JSON.stringify(tasks));
+    }
+  }, [tasks, isInitialLoadComplete]);
+
+  // Save nextId to localStorage whenever it changes
+  const saveNextId = () => {
+    localStorage.setItem('todoNextId', nextId.current.toString());
+  };
 
   // Track previous task ids for slide-in animation
-  React.useEffect(() => {
+  useEffect(() => {
     prevTasksRef.current = tasks.map(t => t.id);
   }, [tasks]);
 
@@ -52,6 +85,7 @@ const TodoListWidget: React.FC = () => {
       { id: nextId.current++, text: input.trim(), completed: false },
       ...prev
     ]);
+    saveNextId(); // Save the updated nextId to localStorage
     setInput('');
   };
 
