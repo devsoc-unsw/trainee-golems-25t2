@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { StatusCodeMap } from "../constants/errors";
 import * as userService from "../services/user.service";
+import { createSessionForUser } from "../services/auth.service";
 
 async function profile(req: Request, res: Response) {
   try {
@@ -11,12 +12,12 @@ async function profile(req: Request, res: Response) {
     const message = err instanceof Error ? err.message : "An error occurred";
     const statusCode = StatusCodeMap[message] || 500;
     res.status(statusCode).json({
-      error: message
+      error: message,
     });
   }
 }
 
-export { profile }
+export { profile };
 
 export async function upsertClerk(req: Request, res: Response) {
   try {
@@ -53,6 +54,14 @@ export async function upsertClerk(req: Request, res: Response) {
       email,
       name: name || "No Name",
       avatar,
+    });
+    // ensure a backend session exists so cookies are set for subsequent API calls
+    const sessionId = await createSessionForUser(user.id);
+    res.cookie("sessionId", sessionId, {
+      maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
     });
     return res.json(user);
   } catch (err: unknown) {

@@ -7,9 +7,12 @@ import dashRoutes from "./routes/dash.routes";
 import userRoutes from "./routes/user.routes";
 import todoRoutes from "./routes/todo.routes";
 import timerRoutes from "./routes/timer.routes";
+import spotifyRoutes from "./routes/spotify.routes";
 import { errorMiddleware } from "./middleware";
 import aiNotesRoutes from "./routes/ainotes.routes";
 import { loadData } from "./dataStore";
+
+dotenv.config();
 
 export const app = express();
 const port = process.env.PORT || 3000;
@@ -19,7 +22,7 @@ app.use(cookieParser());
 // CORS before routes (allow frontend dev server)
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
     credentials: true,
   })
 );
@@ -29,10 +32,9 @@ app.use("/api/user", userRoutes);
 app.use("/api/dashboard", dashRoutes);
 app.use("/api/todos", todoRoutes);
 app.use("/api/timer", timerRoutes);
+app.use("", spotifyRoutes);
 app.use("", aiNotesRoutes);
 app.use(errorMiddleware);
-
-dotenv.config();
 
 function startServer() {
   try {
@@ -45,7 +47,7 @@ function startServer() {
     // Routes & middleware
     app.use(
       cors({
-        origin: "http://localhost:5173",
+        origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
         credentials: true,
       })
     );

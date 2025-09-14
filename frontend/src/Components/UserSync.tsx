@@ -20,7 +20,9 @@ const UserSync: React.FC<UserSyncProps> = ({ children }) => {
 
       try {
         const API_BASE =
-          import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+          import.meta.env.VITE_API_BASE_URL ||
+          import.meta.env.VITE_BACKEND_URL ||
+          "http://127.0.0.1:3001";
 
         const response = await fetch(`${API_BASE}/api/user/clerk`, {
           method: "POST",
