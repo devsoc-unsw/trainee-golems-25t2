@@ -54,7 +54,7 @@ export const validateMarketplaceItem = (data: MarketplaceItemInput): ValidationR
 /**
  * Format marketplace item for API response
  */
-export const formatMarketplaceItem = (item: any) => {
+export const formatMarketplaceItem = (item) => {
   return {
     id: item.id,
     title: item.title,
