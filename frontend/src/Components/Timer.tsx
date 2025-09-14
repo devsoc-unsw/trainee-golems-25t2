@@ -8,13 +8,44 @@ type SessionType = "Focus" | "Break";
 const durations = [15, 20, 25, 30, 45, 60];
 
 const Timer: React.FC = () => {
-	const [minutes, setMinutes] = React.useState(25);
-	const [seconds, setSeconds] = React.useState(0);
+	const [minutes, setMinutes] = React.useState(() => {
+		const saved = localStorage.getItem('timer-minutes');
+		return saved ? parseInt(saved, 10) : 25;
+	});
+	const [seconds, setSeconds] = React.useState(() => {
+		const saved = localStorage.getItem('timer-seconds');
+		return saved ? parseInt(saved, 10) : 0;
+	});
 	const [isActive, setIsActive] = React.useState(false);
+	const isActiveRef = React.useRef(isActive);
+	React.useEffect(() => { isActiveRef.current = isActive; }, [isActive]);
 	const [sessionType, setSessionType] = React.useState<SessionType>("Focus");
 	const endTimeRef = React.useRef<number | null>(null);
 	const focusSoundRef = React.useRef<HTMLAudioElement | null>(null);
 	const breakSoundRef = React.useRef<HTMLAudioElement | null>(null);
+
+	// Keyboard shortcut: Space bar to start/pause
+	React.useEffect(() => {
+		const handleKeyDown = (e: KeyboardEvent) => {
+			const tag = (e.target as HTMLElement)?.tagName;
+			const isEditable = (e.target as HTMLElement)?.isContentEditable;
+			if (tag === 'INPUT' || tag === 'TEXTAREA' || isEditable) return;
+			if (e.code === 'Space' || e.key === ' ') {
+				e.preventDefault();
+				// Use the latest isActive value
+				if (isActiveRef.current) {
+					// If running, pause
+					setIsActive(false);
+					endTimeRef.current = null;
+				} else {
+					// If paused, start
+					setIsActive(true);
+				}
+			}
+		};
+		window.addEventListener('keydown', handleKeyDown);
+		return () => window.removeEventListener('keydown', handleKeyDown);
+	}, []);
 
 	// Preload sounds
 	useEffect(() => {
@@ -124,6 +155,8 @@ const Timer: React.FC = () => {
 		setSessionType("Focus");
 		setMinutes(duration);
 		setSeconds(0);
+		localStorage.setItem('timer-minutes', duration.toString());
+		localStorage.setItem('timer-seconds', '0');
 		if (isActive) {
 			endTimeRef.current = Date.now() + duration * 60 * 1000;
 		} else {
@@ -140,6 +173,8 @@ const Timer: React.FC = () => {
 
 		setMinutes(newMinutes);
 		setSeconds(newSeconds);
+		localStorage.setItem('timer-minutes', newMinutes.toString());
+		localStorage.setItem('timer-seconds', newSeconds.toString());
 
 		if (isActive && endTimeRef.current) {
 			endTimeRef.current += delta * 60 * 1000;
