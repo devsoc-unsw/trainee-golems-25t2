@@ -114,7 +114,9 @@ export async function authLogout(sessionId: string) {
 /**
  * Get user by session ID
  */
-export async function getUserBySession(sessionId: string): Promise<User | null> {
+export async function getUserBySession(
+  sessionId: string
+): Promise<User | null> {
   const session = await prisma.session.findUnique({
     where: { sessionId },
     include: { user: true },
@@ -132,4 +134,18 @@ export async function isValidSession(sessionId: string): Promise<boolean> {
   });
 
   return !!session;
+}
+
+/**
+ * Creates a session for an existing user id
+ */
+export async function createSessionForUser(userId: string) {
+  const sessionId = generateSessionId();
+  const session = await prisma.session.create({
+    data: {
+      sessionId,
+      userId,
+    },
+  });
+  return session.sessionId;
 }

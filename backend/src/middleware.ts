@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { isValidSession } from "./services/auth.service";
 import { ErrorMap, StatusCodeMap } from "./constants/errors";
+import rateLimit from "express-rate-limit";
 
 // import { getSessionsCollection } from "./db";
 
@@ -49,3 +50,11 @@ function errorMiddleware(
 }
 
 export { errorMiddleware, sessionMiddleware };
+
+// Spotify API rate limiting middleware (per IP)
+export const spotifyRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
