@@ -8,6 +8,7 @@ import userRoutes from "./routes/user.routes";
 import todoRoutes from "./routes/todo.routes";
 import timerRoutes from "./routes/timer.routes";
 import spotifyRoutes from "./routes/spotify.routes";
+import marketplaceRoutes from "./routes/marketplace.routes";
 import { errorMiddleware } from "./middleware";
 import { loadData } from "./dataStore";
 
@@ -31,6 +32,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/dashboard", dashRoutes);
 app.use("/api/todos", todoRoutes);
 app.use("/api/timer", timerRoutes);
+app.use("/api/marketplace", marketplaceRoutes);
 app.use("", spotifyRoutes);
 app.use(errorMiddleware);
 
