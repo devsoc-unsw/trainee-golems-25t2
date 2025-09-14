@@ -1,12 +1,12 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Sidebar from "../Components/Sidebar";
 import DotGrid from "../Components/DotGrid";
 import { useSidebar } from "../hooks/useSidebar";
-import { useCallback, useEffect, useMemo, useState } from "react";
 
 type GeneratedNote = {
   id: string;
   title: string;
-  content?: string | null;
+  content: string | null;
   status: "QUEUED" | "PROCESSING" | "COMPLETED" | "FAILED";
   quality: "SIMPLE" | "BALANCED" | "DETAILED";
   createdAt: string;
@@ -14,6 +14,7 @@ type GeneratedNote = {
 
 export default function AINotes() {
   const { collapsed } = useSidebar();
+
   const [file, setFile] = useState<File | null>(null);
   const [quality, setQuality] = useState<"SIMPLE" | "BALANCED" | "DETAILED">(
     "BALANCED"
@@ -21,6 +22,7 @@ export default function AINotes() {
   const [title, setTitle] = useState("");
   const [notes, setNotes] = useState<GeneratedNote[]>([]);
   const [creatingId, setCreatingId] = useState<string | null>(null);
+  const [activeNote, setActiveNote] = useState<GeneratedNote | null>(null);
 
   const backend = useMemo(
     () => import.meta.env.VITE_BACKEND_URL || "http://127.0.0.1:3001",
@@ -36,19 +38,22 @@ export default function AINotes() {
     setNotes(data);
   }, [backend]);
 
-  async function poll(id: string) {
-    const res = await fetch(`${backend}/api/ainotes/${id}`, {
-      credentials: "include",
-    });
-    if (!res.ok) return;
-    const item = (await res.json()) as GeneratedNote;
-    setNotes((prev) => prev.map((n) => (n.id === id ? item : n)));
-    if (item.status === "PROCESSING" || item.status === "QUEUED") {
-      setTimeout(() => poll(id), 1500);
-    } else {
-      setCreatingId(null);
-    }
-  }
+  const poll = useCallback(
+    async (id: string) => {
+      const res = await fetch(`${backend}/api/ainotes/${id}`, {
+        credentials: "include",
+      });
+      if (!res.ok) return;
+      const item = (await res.json()) as GeneratedNote;
+      setNotes((prev) => prev.map((n) => (n.id === id ? item : n)));
+      if (item.status === "PROCESSING" || item.status === "QUEUED") {
+        setTimeout(() => poll(id), 1500);
+      } else {
+        setCreatingId(null);
+      }
+    },
+    [backend]
+  );
 
   useEffect(() => {
     fetchList();
@@ -72,6 +77,22 @@ export default function AINotes() {
     await fetchList();
     poll(id);
   }
+
+  const [deleteTarget, setDeleteTarget] = useState<GeneratedNote | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const performDelete = useCallback(async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
+    const res = await fetch(`${backend}/api/ainotes/${deleteTarget.id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    setIsDeleting(false);
+    if (!res.ok) return;
+    setNotes((prev) => prev.filter((n) => n.id !== deleteTarget.id));
+    if (activeNote?.id === deleteTarget.id) setActiveNote(null);
+    setDeleteTarget(null);
+  }, [backend, deleteTarget, activeNote?.id]);
 
   return (
     <div className="min-h-screen h-full bg-gradient-to-br from-slate-50 to-slate-100 dark:from-neutral-900 dark:to-neutral-950 relative overflow-hidden transition-colors duration-300">
@@ -155,6 +176,7 @@ export default function AINotes() {
                 </form>
               </div>
             </div>
+
             <div className="order-2 md:order-2 md:col-span-2">
               <div className="bg-white dark:bg-neutral-900 dark:text-gray-100 rounded-2xl shadow-xl p-6">
                 <h3 className="text-lg font-semibold mb-3">My AI Notes</h3>
@@ -180,6 +202,26 @@ export default function AINotes() {
                           ? "Failed to generate notes."
                           : "Processing..."}
                       </div>
+                      <div className="mt-3 flex justify-end">
+                        <div className="flex items-center gap-2">
+                          <button
+                            className="rounded-md border border-gray-300 dark:border-neutral-700 px-3 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800"
+                            onClick={() => setActiveNote(n)}
+                            disabled={!n.content}
+                            title={
+                              !n.content ? "Notes not ready yet" : undefined
+                            }
+                          >
+                            View full note
+                          </button>
+                          <button
+                            className="rounded-md border border-red-300 text-red-700 dark:border-red-600 dark:text-red-400 px-3 py-1.5 text-sm hover:bg-red-50 dark:hover:bg-red-900/30"
+                            onClick={() => setDeleteTarget(n)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   ))}
                   {notes.length === 0 && (
@@ -193,6 +235,91 @@ export default function AINotes() {
           </div>
         </div>
       </div>
+
+      {activeNote && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center"
+        >
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setActiveNote(null)}
+          />
+          <div className="relative z-10 w-full max-w-3xl max-h-[85vh] rounded-xl border border-white/15 bg-white dark:bg-neutral-900 text-slate-900 dark:text-white shadow-2xl overflow-hidden">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-neutral-800">
+              <div className="flex items-center gap-2">
+                <h4 className="font-semibold truncate max-w-[60vw]">
+                  {activeNote.title}
+                </h4>
+                <span className="text-xs px-2 py-0.5 rounded bg-gray-100 dark:bg-neutral-800">
+                  {activeNote.quality} · {activeNote.status}
+                </span>
+              </div>
+              <button
+                className="rounded-md border border-gray-300 dark:border-neutral-700 px-2 py-1 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800"
+                onClick={() => setActiveNote(null)}
+                aria-label="Close"
+              >
+                Close
+              </button>
+            </div>
+            <div
+              className="px-4 py-4 overflow-y-auto"
+              style={{ maxHeight: "calc(85vh - 48px)" }}
+            >
+              <div className="whitespace-pre-wrap text-sm">
+                {activeNote.content || "No content available."}
+              </div>
+              <div className="mt-4 flex justify-end">
+                <button
+                  className="rounded-md border border-red-300 text-red-700 dark:border-red-600 dark:text-red-400 px-3 py-1.5 text-sm hover:bg-red-50 dark:hover:bg-red-900/30"
+                  onClick={() => setDeleteTarget(activeNote)}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {deleteTarget && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 flex items-center justify-center"
+        >
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setDeleteTarget(null)}
+          />
+          <div className="relative z-10 w-full max-w-md rounded-xl border border-white/15 bg-white dark:bg-neutral-900 text-slate-900 dark:text-white shadow-2xl">
+            <div className="px-5 py-4 border-b border-gray-200 dark:border-neutral-800 font-semibold">
+              Delete AI Note
+            </div>
+            <div className="px-5 py-4 text-sm">
+              Are you sure you want to permanently delete
+              <span className="font-medium"> {deleteTarget.title}</span>?
+            </div>
+            <div className="px-5 py-4 flex items-center justify-end gap-2 border-t border-gray-200 dark:border-neutral-800">
+              <button
+                className="rounded-md border border-gray-300 dark:border-neutral-700 px-3 py-1.5 text-sm hover:bg-gray-100 dark:hover:bg-neutral-800"
+                onClick={() => setDeleteTarget(null)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </button>
+              <button
+                className="rounded-md border border-red-300 text-red-700 dark:border-red-600 dark:text-red-400 px-3 py-1.5 text-sm hover:bg-red-50 dark:hover:bg-red-900/30 disabled:opacity-60"
+                onClick={performDelete}
+                disabled={isDeleting}
+              >
+                {isDeleting ? "Deleting..." : "Delete"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
