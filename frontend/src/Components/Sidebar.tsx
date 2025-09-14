@@ -87,7 +87,7 @@ const Sidebar = () => {
           {navItems.map((item) => (
             <button
               key={item.name}
-              className={`flex items-center gap-2 py-2 rounded-md 
+              className={`flex items-center gap-2 py-2 rounded-md
               hover:bg-blue-200 dark:hover:bg-blue-800 w-full 
               ${collapsed ? "justify-center" : "justify-start"}`}
               onClick={() => {
@@ -97,6 +97,8 @@ const Sidebar = () => {
                   navigate("/dashboard");
                 } else if (item.name === "AI Notes Conversion") {
                   navigate("/ai-notes");
+                } else if (item.name === "Marketplace") {
+                  navigate("/marketplace");
                 }
               }}
             >
