@@ -3,13 +3,22 @@ import { app } from "../server";
 import { prisma } from "../lib/prisma";
 
 let testUserId: string;
-let testSessionId = "test-session-id";
+let testSessionId = `test-dash-session-id-${Date.now()}`;
 
 beforeAll(async () => {
+  // Clean up any existing test data first
+  await prisma.task.deleteMany({ where: { user: { email: { contains: "test-dash" } } } });
+  await prisma.studySession.deleteMany({ where: { user: { email: { contains: "test-dash" } } } });
+  await prisma.marketplaceItem.deleteMany({ where: { user: { email: { contains: "test-dash" } } } });
+  await prisma.accommodation.deleteMany({ where: { user: { email: { contains: "test-dash" } } } });
+  await prisma.note.deleteMany({ where: { user: { email: { contains: "test-dash" } } } });
+  await prisma.session.deleteMany({ where: { user: { email: { contains: "test-dash" } } } });
+  await prisma.user.deleteMany({ where: { email: { contains: "test-dash" } } });
+
   const user = await prisma.user.create({
     data: {
-      email: "test@example.com",
-      name: "Test User",
+      email: `test-dash-${Date.now()}@example.com`,
+      name: "Test Dashboard User",
       password: "Password123!",
     },
   });
@@ -84,13 +93,15 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await prisma.user.delete({ where: { id: testUserId } });
-  await prisma.session.deleteMany({ where: { userId: testUserId } });
-  await prisma.note.deleteMany({ where: { userId: testUserId } });
-  await prisma.accommodation.deleteMany({ where: { userId: testUserId } });
-  await prisma.marketplaceItem.deleteMany({ where: { userId: testUserId } });
-  await prisma.studySession.deleteMany({ where: { userId: testUserId } });
-  await prisma.task.deleteMany({ where: { userId: testUserId } });
+  if (testUserId) {
+    await prisma.task.deleteMany({ where: { userId: testUserId } });
+    await prisma.studySession.deleteMany({ where: { userId: testUserId } });
+    await prisma.marketplaceItem.deleteMany({ where: { userId: testUserId } });
+    await prisma.accommodation.deleteMany({ where: { userId: testUserId } });
+    await prisma.note.deleteMany({ where: { userId: testUserId } });
+    await prisma.session.deleteMany({ where: { userId: testUserId } });
+    await prisma.user.delete({ where: { id: testUserId } });
+  }
   await prisma.$disconnect();
 });
 
@@ -110,7 +121,7 @@ describe("dashboard summary endpoint", () => {
 
     const body = response.body;
     expect(body.greeting).toStrictEqual(expect.any(String));
-    expect(body.username).toStrictEqual("Test User");
+    expect(body.username).toStrictEqual("Test Dashboard User");
     expect(body.recent_notes).toStrictEqual([
       {
         id: expect.any(String),
